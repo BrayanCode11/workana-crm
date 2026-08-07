@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui";
 import { DeleteOpportunityButton } from "@/features/opportunities/delete-opportunity-button";
+import { OpportunityNotes } from "@/features/opportunities/opportunity-notes";
 import { getOpportunity } from "@/features/opportunities/queries";
 import { StageForm } from "@/features/opportunities/stage-form";
 import {
@@ -39,6 +40,13 @@ export default async function OpportunityDetailPage({
       ? "Oportunidad actualizada correctamente."
       : query.stage_updated === "1"
         ? "Etapa actualizada correctamente."
+        : null;
+  const noteFeedback = query.note_created === "1"
+    ? "Nota guardada correctamente."
+    : query.note_updated === "1"
+      ? "Nota actualizada correctamente."
+      : query.note_deleted === "1"
+        ? "Nota eliminada correctamente."
         : null;
   const stageError = query.stage_error === "1";
   const notes = opportunity.opportunity_notes ?? [];
@@ -141,16 +149,7 @@ export default async function OpportunityDetailPage({
         </section>
       </div>
 
-      <section className="section">
-        <div className="section-heading"><h2>Notas</h2><span className="section-count">{notes.length}</span></div>
-        <div className="panel notes-preview">
-          {notes.length === 0 ? (
-            <p>Esta oportunidad aún no tiene notas. La gestión de notas se habilitará en la siguiente fase.</p>
-          ) : notes.map((note) => (
-            <article key={note.id}><p>{note.content}</p><time dateTime={note.created_at}>{formatDateTime(note.created_at)}</time></article>
-          ))}
-        </div>
-      </section>
+      <OpportunityNotes opportunityId={opportunity.id} notes={notes} feedback={noteFeedback} />
 
       <section className="danger-zone section">
         <div><h2>Eliminar oportunidad</h2><p>Se eliminará también su historial de notas. Esta acción es permanente.</p></div>

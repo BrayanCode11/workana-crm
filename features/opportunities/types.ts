@@ -86,6 +86,11 @@ export type OpportunityFormState = {
   errors?: Partial<Record<OpportunityFormField, string>>;
 };
 
+export type NoteFormState = {
+  message?: string;
+  errors?: { content?: string };
+};
+
 export type OpportunityFilters = {
   q?: string;
   stage?: string;
@@ -97,4 +102,3 @@ export type OpportunityFilters = {
 export type OpportunityFormValues = OpportunityRow & {
   stage: OpportunityStage | string;
 };
-

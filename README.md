@@ -15,6 +15,10 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Esquema PostgreSQL versionado con integridad referencial y RLS.
 - Clientes: listado, búsqueda, creación, edición, detalle y eliminación protegida.
 - Métricas de clientes calculadas desde oportunidades y agrupadas por moneda.
+- Oportunidades: listado con búsqueda y filtros, creación, edición, detalle y eliminación.
+- Creación rápida de clientes desde una oportunidad y atribución a experimentos/variantes.
+- Cambio de etapa con timestamps automáticos y cierres ganado/perdido validados.
+- Validación de formularios complejos con Zod antes de escribir en PostgreSQL.
 - ESLint y comandos separados para lint, typecheck y build.
 
 Los módulos CRUD se incorporarán progresivamente sobre esta base segura.
@@ -26,8 +30,9 @@ Los módulos CRUD se incorporarán progresivamente sobre esta base segura.
 - TypeScript
 - Tailwind CSS 4
 - Lucide React
-- Supabase (próxima fase)
-- Vercel (despliegue futuro)
+- Supabase
+- Zod
+- Vercel
 
 ## Requisitos
 
@@ -42,7 +47,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000). Por ahora las variables de Supabase pueden permanecer vacías.
+Abre [http://localhost:3000](http://localhost:3000). Las variables de Supabase deben apuntar al proyecto configurado.
 
 ## Comandos
 

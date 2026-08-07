@@ -1,23 +1,33 @@
-import { ArrowLeft, Info } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
+import { createOpportunityAction } from "@/features/opportunities/actions";
+import { OpportunityForm } from "@/features/opportunities/opportunity-form";
+import { getOpportunityFormOptions } from "@/features/opportunities/queries";
 
-export default function NewOpportunityPage() {
+export default async function NewOpportunityPage({ searchParams }: PageProps<"/opportunities/new">) {
+  const [params, options] = await Promise.all([searchParams, getOpportunityFormOptions()]);
+  const requestedClient = typeof params.client === "string" ? params.client : "";
+  const defaultClientId = options.clients.some((client) => client.id === requestedClient) ? requestedClient : undefined;
+
   return (
     <>
-      <Link className="section-link" href="/opportunities">← Volver a oportunidades</Link>
-      <div style={{ marginTop: 20 }}>
+      <Link className="back-link" href="/opportunities"><ArrowLeft size={14} /> Volver a oportunidades</Link>
+      <div className="entity-page-heading">
         <PageHeader
-          eyebrow="Registro rápido"
+          eyebrow="Nuevo registro"
           title="Nueva oportunidad"
-          description="El formulario se habilitará al conectar Supabase, para que los datos se guarden desde el primer registro."
+          description="El título es lo único obligatorio. Añade ahora solo la información que ayude a decidir y hacer seguimiento."
         />
       </div>
-      <section className="panel empty-state empty-state-compact">
-        <span className="empty-icon" aria-hidden="true"><Info size={21} /></span>
-        <h2>Disponible en la fase de oportunidades</h2>
-        <p>Antes configuraremos autenticación y seguridad para evitar almacenar información comercial sin protección.</p>
-        <Link className="button" href="/opportunities"><ArrowLeft size={15} /> Volver</Link>
+      <section className="panel opportunity-form-panel">
+        <OpportunityForm
+          action={createOpportunityAction}
+          options={options}
+          defaultClientId={defaultClientId}
+          cancelHref="/opportunities"
+          submitLabel="Crear oportunidad"
+        />
       </section>
     </>
   );

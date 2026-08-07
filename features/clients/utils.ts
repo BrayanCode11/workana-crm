@@ -21,11 +21,11 @@ export function getClientMetrics(opportunities: ClientOpportunity[]): ClientMetr
 
   opportunities.forEach((opportunity) => {
     if (opportunity.stage !== "won" && opportunity.stage !== "lost") active += 1;
-    if (opportunity.won_at) won += 1;
-    if (opportunity.lost_at) lost += 1;
+    if (opportunity.stage === "won") won += 1;
+    if (opportunity.stage === "lost") lost += 1;
 
     if (
-      opportunity.won_at
+      opportunity.stage === "won"
       && opportunity.final_value !== null
       && opportunity.final_value_currency
     ) {

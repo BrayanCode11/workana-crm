@@ -2,6 +2,8 @@
 
 CRM personal, simple y enfocado en organizar la prospección, los seguimientos y el cierre de proyectos en Workana.
 
+**Producción:** [workana-crm.vercel.app](https://workana-crm.vercel.app)
+
 ## Estado actual
 
 La aplicación funcional incluye:
@@ -65,7 +67,7 @@ npm run typecheck  # generación de tipos de rutas y comprobación de TypeScript
 npm test           # pruebas de métricas y fechas
 npm run build      # build de producción
 npm run start      # ejecutar el build
-npm run smoke:production -- https://tu-dominio.vercel.app
+npm run smoke:production -- https://workana-crm.vercel.app
 npm run db:push    # aplicar migraciones al proyecto Supabase enlazado
 npm run db:lint    # analizar el esquema PostgreSQL
 ```
@@ -134,12 +136,12 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
 Después de cambiar una variable hay que volver a desplegar: las variables `NEXT_PUBLIC_*` quedan incorporadas durante el build. Los valores reales nunca se incluyen en el repositorio.
 
-En **Supabase → Authentication → URL Configuration**, configura la URL HTTPS estable de Vercel como **Site URL**. Conserva `http://localhost:3000/**` como redirect URL para desarrollo y añade la URL exacta de producción si se habilitan confirmaciones, recuperación de contraseña u OAuth.
+En **Supabase → Authentication → URL Configuration**, la **Site URL** es `https://workana-crm.vercel.app`. Los redirects autorizados son la misma URL exacta de producción y `http://localhost:3000/**` para desarrollo.
 
 Tras un despliegue, ejecuta la prueba pública sin credenciales:
 
 ```bash
-npm run smoke:production -- https://tu-dominio.vercel.app
+npm run smoke:production -- https://workana-crm.vercel.app
 ```
 
 La prueba confirma HTTPS, protección de rutas, login, encabezados de seguridad y bloqueo de indexación. El flujo autenticado (login, alta y edición de una oportunidad, seguimiento y cierre de sesión) se valida manualmente con una cuenta real, sin almacenar su contraseña.

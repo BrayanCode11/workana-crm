@@ -17,6 +17,9 @@ const dateTimeSchema = z.string()
   }, "El próximo seguimiento debe quedar en el futuro.");
 
 const lostSchema = z.object({
+  lost_at: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Selecciona una fecha válida.")
+    .refine(isCalendarDate, "Selecciona una fecha válida."),
   lost_reason_id: z.string().regex(/^\d+$/, "Selecciona un motivo."),
   lost_reason_notes: z.string().trim().max(2000, "Utiliza como máximo 2.000 caracteres."),
 });
@@ -34,6 +37,18 @@ function isValidBogotaDateTime(value: string) {
     && hour <= 23
     && minute >= 0
     && minute <= 59;
+}
+
+function isCalendarDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year
+    && date.getUTCMonth() === month - 1
+    && date.getUTCDate() === day;
+}
+
+function dateToIso(value: string) {
+  return new Date(`${value}T12:00:00-05:00`).toISOString();
 }
 
 function safeContext(period: string, query: string) {
@@ -175,13 +190,14 @@ export async function markLostFromFollowUpAction(
   const context = safeContext(period, query);
   const { userId } = await requireUser();
   const parsed = lostSchema.safeParse({
+    lost_at: String(formData.get("lost_at") ?? ""),
     lost_reason_id: String(formData.get("lost_reason_id") ?? ""),
     lost_reason_notes: String(formData.get("lost_reason_notes") ?? ""),
   });
   if (!parsed.success) {
     const errors: FollowUpFormState["errors"] = {};
     parsed.error.issues.forEach((issue) => {
-      const field = issue.path[0] as "lost_reason_id" | "lost_reason_notes";
+      const field = issue.path[0] as "lost_at" | "lost_reason_id" | "lost_reason_notes";
       if (!errors[field]) errors[field] = issue.message;
     });
     return { message: "Revisa los datos de cierre.", errors };
@@ -207,6 +223,7 @@ export async function markLostFromFollowUpAction(
     .from("opportunities")
     .update({
       stage: "lost",
+      lost_at: dateToIso(parsed.data.lost_at),
       lost_reason_id: reasonId,
       lost_reason_notes: parsed.data.lost_reason_notes || null,
     })

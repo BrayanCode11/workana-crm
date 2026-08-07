@@ -22,6 +22,8 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Notas de oportunidad en texto simple con creación, edición, eliminación y orden cronológico inverso.
 - Seguimientos agrupados en vencidos, hoy y próximos, con registro, reprogramación y cierre rápido.
 - Pipeline Kanban con arrastre por puntero/teclado, actualización optimista, rollback y selector accesible.
+- Cierres ganados y perdidos con valor final, moneda, fecha, motivo y observaciones validadas.
+- Hitos comerciales históricos inmutables aunque una oportunidad vuelva a una etapa anterior.
 - ESLint y comandos separados para lint, typecheck y build.
 
 Los módulos CRUD se incorporarán progresivamente sobre esta base segura.

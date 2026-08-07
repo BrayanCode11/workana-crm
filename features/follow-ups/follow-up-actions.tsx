@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useActionState, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import type { LostReason } from "@/features/opportunities/types";
-import { dateTimeInputValue } from "@/features/opportunities/utils";
+import { dateInputValue, dateTimeInputValue } from "@/features/opportunities/utils";
 import {
   markLostFromFollowUpAction,
   markRespondedAction,
@@ -42,6 +42,7 @@ export function FollowUpActions({
       : null;
   const canMarkResponded = ["contacted", "follow_up_1", "follow_up_2"].includes(opportunity.stage);
   const noResponseReason = lostReasons.find((reason) => reason.slug === "no_response");
+  const today = dateInputValue(new Date().toISOString());
 
   return (
     <>
@@ -135,6 +136,19 @@ export function FollowUpActions({
           </div>
           <p className="action-dialog-description">El seguimiento pendiente se cancelará y conservarás los hitos anteriores.</p>
           {lostState.message && <p className="form-error" role="alert">{lostState.message}</p>}
+          <div className="field-group">
+            <label htmlFor={`lost-date-${opportunity.id}`}>Fecha de cierre</label>
+            <input
+              id={`lost-date-${opportunity.id}`}
+              name="lost_at"
+              type="date"
+              defaultValue={today}
+              required
+              disabled={lostPending}
+              aria-invalid={Boolean(lostState.errors?.lost_at)}
+            />
+            {lostState.errors?.lost_at && <span className="field-error">{lostState.errors.lost_at}</span>}
+          </div>
           <div className="field-group">
             <label htmlFor={`lost-reason-${opportunity.id}`}>Motivo</label>
             <select

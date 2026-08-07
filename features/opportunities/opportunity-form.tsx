@@ -54,6 +54,7 @@ export function OpportunityForm({
   const customProjectType = values?.project_type && !projectTypes.includes(values.project_type as (typeof projectTypes)[number])
     ? values.project_type
     : null;
+  const today = dateInputValue(new Date().toISOString());
 
   return (
     <form action={formAction} className="entity-form opportunity-form">
@@ -300,7 +301,7 @@ export function OpportunityForm({
             </div>
             <div className="field-group">
               <label htmlFor="won_at">Fecha de cierre</label>
-              <input id="won_at" name="won_at" type="date" defaultValue={dateInputValue(values?.won_at ?? null)} />
+              <input id="won_at" name="won_at" type="date" defaultValue={dateInputValue(values?.won_at ?? null) || today} required />
               <FieldError field="won_at" state={state} />
             </div>
           </div>
@@ -322,7 +323,7 @@ export function OpportunityForm({
             </div>
             <div className="field-group">
               <label htmlFor="lost_at">Fecha de cierre</label>
-              <input id="lost_at" name="lost_at" type="date" defaultValue={dateInputValue(values?.lost_at ?? null)} />
+              <input id="lost_at" name="lost_at" type="date" defaultValue={dateInputValue(values?.lost_at ?? null) || today} required />
               <FieldError field="lost_at" state={state} />
             </div>
             <div className="field-group form-field-wide">
@@ -363,4 +364,3 @@ function CurrencySelect({
     </select>
   );
 }
-

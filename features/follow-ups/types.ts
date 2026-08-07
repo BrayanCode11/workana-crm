@@ -32,8 +32,8 @@ export type FollowUpFormState = {
   message?: string;
   errors?: {
     next_follow_up_at?: string;
+    lost_at?: string;
     lost_reason_id?: string;
     lost_reason_notes?: string;
   };
 };
-

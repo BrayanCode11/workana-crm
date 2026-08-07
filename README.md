@@ -145,3 +145,5 @@ npm run smoke:production -- https://workana-crm.vercel.app
 ```
 
 La prueba confirma HTTPS, protección de rutas, login, encabezados de seguridad y bloqueo de indexación. El flujo autenticado (login, alta y edición de una oportunidad, seguimiento y cierre de sesión) se valida manualmente con una cuenta real, sin almacenar su contraseña.
+
+Las funciones de Vercel se ejecutan en Portland (`pdx1`), la región equivalente a `us-west-2` donde reside Supabase. La validación de sesión del DAL se memoiza durante cada render para evitar verificaciones repetidas entre layouts y consultas sin reducir la autorización en servidor.

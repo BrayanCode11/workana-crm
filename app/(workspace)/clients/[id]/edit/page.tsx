@@ -6,7 +6,11 @@ import { updateClientAction } from "@/features/clients/actions";
 import { ClientForm } from "@/features/clients/client-form";
 import { getClient } from "@/features/clients/queries";
 
-export default async function EditClientPage({ params }: PageProps<"/clients/[id]/edit">) {
+type EditClientPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function EditClientPage({ params }: EditClientPageProps) {
   const { id } = await params;
   const client = await getClient(id);
   if (!client) notFound();

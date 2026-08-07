@@ -7,6 +7,11 @@ export const metadata: Metadata = {
     template: "%s — Prospecta",
   },
   description: "CRM personal para organizar oportunidades, seguimientos y cierres en Workana.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

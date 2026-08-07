@@ -61,10 +61,11 @@ Abre [http://localhost:3000](http://localhost:3000). Las variables de Supabase d
 ```bash
 npm run dev        # servidor de desarrollo
 npm run lint       # análisis estático
-npm run typecheck  # comprobación de TypeScript
+npm run typecheck  # generación de tipos de rutas y comprobación de TypeScript
 npm test           # pruebas de métricas y fechas
 npm run build      # build de producción
 npm run start      # ejecutar el build
+npm run smoke:production -- https://tu-dominio.vercel.app
 npm run db:push    # aplicar migraciones al proyecto Supabase enlazado
 npm run db:lint    # analizar el esquema PostgreSQL
 ```
@@ -122,4 +123,23 @@ Las relaciones compuestas garantizan que cliente, oportunidad, nota, experimento
 
 ## Build y despliegue
 
-Antes de cada entrega importante se ejecutan tests, lint, typecheck y build. La rama `main` está conectada a Vercel; cada publicación inicia un nuevo despliegue. Las variables de Supabase se configuran separadamente en Vercel y nunca se incluyen en el repositorio.
+Antes de cada entrega importante se ejecutan tests, lint, typecheck y build. El workflow `Quality` repite estas comprobaciones en GitHub para cada pull request y cada push a `main`.
+
+La rama `main` está conectada a Vercel; cada publicación inicia un nuevo despliegue de producción. En **Vercel → Project → Settings → Environment Variables** deben existir estas variables para `Production` y, si se usan despliegues de revisión, también para `Preview`:
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
+
+Después de cambiar una variable hay que volver a desplegar: las variables `NEXT_PUBLIC_*` quedan incorporadas durante el build. Los valores reales nunca se incluyen en el repositorio.
+
+En **Supabase → Authentication → URL Configuration**, configura la URL HTTPS estable de Vercel como **Site URL**. Conserva `http://localhost:3000/**` como redirect URL para desarrollo y añade la URL exacta de producción si se habilitan confirmaciones, recuperación de contraseña u OAuth.
+
+Tras un despliegue, ejecuta la prueba pública sin credenciales:
+
+```bash
+npm run smoke:production -- https://tu-dominio.vercel.app
+```
+
+La prueba confirma HTTPS, protección de rutas, login, encabezados de seguridad y bloqueo de indexación. El flujo autenticado (login, alta y edición de una oportunidad, seguimiento y cierre de sesión) se valida manualmente con una cuenta real, sin almacenar su contraseña.

@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getSupabaseConfig } from "./config";
 import type { Database } from "./database.types";
 
-const PUBLIC_ROUTES = new Set(["/login"]);
+const PUBLIC_ROUTES = new Set(["/login", "/robots.txt"]);
 const SESSION_HEADERS = ["cache-control", "expires", "pragma"] as const;
 
 function copySessionMetadata(source: NextResponse, target: NextResponse) {

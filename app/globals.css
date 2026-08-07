@@ -1600,15 +1600,19 @@ a {
 .follow-up-tabs {
   display: flex;
   gap: 1px;
+  width: fit-content;
   margin-bottom: 18px;
   padding: 3px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #e9ecea;
-  width: fit-content;
 }
 
 .follow-up-tab {
+  display: inline-flex;
+  min-height: 31px;
+  align-items: center;
+  gap: 7px;
   padding: 6px 12px;
   border: 0;
   border-radius: 4px;
@@ -1618,10 +1622,182 @@ a {
   font-weight: 600;
 }
 
+.follow-up-tab span {
+  display: inline-grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 4px;
+  background: rgb(23 32 28 / 6%);
+  color: var(--faint);
+  font-size: 9px;
+}
+
 .follow-up-tab-active {
   background: white;
   color: var(--ink);
   box-shadow: 0 1px 2px rgb(23 32 28 / 8%);
+}
+
+.follow-ups-table {
+  min-width: 1280px;
+}
+
+.follow-ups-table th:last-child,
+.follow-ups-table td:last-child {
+  width: 220px;
+}
+
+.follow-up-overdue-date {
+  color: #a13c30 !important;
+  font-weight: 650;
+}
+
+.follow-up-actions {
+  min-width: 190px;
+}
+
+.follow-up-actions > summary {
+  display: inline-flex;
+  min-height: 31px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 650;
+  cursor: pointer;
+  list-style: none;
+}
+
+.follow-up-actions > summary::-webkit-details-marker {
+  display: none;
+}
+
+.follow-up-actions[open] > summary svg {
+  transform: rotate(180deg);
+}
+
+.follow-up-actions-menu {
+  display: grid;
+  width: 210px;
+  gap: 2px;
+  margin-top: 6px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-subtle);
+}
+
+.follow-up-actions-menu a,
+.follow-up-actions-menu button {
+  display: flex;
+  width: 100%;
+  min-height: 31px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #4c5550;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.follow-up-actions-menu a:hover,
+.follow-up-actions-menu button:hover {
+  background: white;
+  color: var(--ink);
+}
+
+.follow-up-actions-menu button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.follow-up-actions-menu .follow-up-lost-action {
+  color: #9a4035;
+}
+
+.action-dialog {
+  width: min(92vw, 480px);
+  max-height: 88vh;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgb(19 30 24 / 20%);
+}
+
+.action-dialog::backdrop {
+  background: rgb(17 24 20 / 42%);
+  backdrop-filter: blur(2px);
+}
+
+.action-dialog-card {
+  padding: 22px;
+}
+
+.action-dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.action-dialog-heading span {
+  color: var(--faint);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.action-dialog-heading h2 {
+  margin: 3px 0 0;
+  font-size: 17px;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+}
+
+.action-dialog-heading > button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.action-dialog-description {
+  margin: 11px 0 19px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.action-dialog-card > .field-group + .field-group {
+  margin-top: 15px;
+}
+
+.action-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 21px;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
 }
 
 @media (max-width: 1050px) {
@@ -1892,6 +2068,24 @@ a {
 
   .filter-chip {
     white-space: nowrap;
+  }
+
+  .follow-up-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .follow-up-tab {
+    flex: none;
+  }
+
+  .action-dialog-card {
+    padding: 19px 17px;
+  }
+
+  .action-dialog-footer {
+    align-items: stretch;
+    flex-direction: column-reverse;
   }
 
   .kanban-scroll {

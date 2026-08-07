@@ -20,6 +20,7 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Cambio de etapa con timestamps automáticos y cierres ganado/perdido validados.
 - Validación de formularios complejos con Zod antes de escribir en PostgreSQL.
 - Notas de oportunidad en texto simple con creación, edición, eliminación y orden cronológico inverso.
+- Seguimientos agrupados en vencidos, hoy y próximos, con registro, reprogramación y cierre rápido.
 - ESLint y comandos separados para lint, typecheck y build.
 
 Los módulos CRUD se incorporarán progresivamente sobre esta base segura.

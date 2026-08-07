@@ -1915,8 +1915,11 @@ a {
 }
 
 .action-dialog {
+  position: fixed;
+  inset: 50% auto auto 50%;
   width: min(92vw, 480px);
   max-height: 88vh;
+  margin: 0;
   padding: 0;
   overflow: auto;
   border: 1px solid var(--line-strong);
@@ -1924,6 +1927,8 @@ a {
   background: white;
   color: var(--ink);
   box-shadow: 0 24px 80px rgb(19 30 24 / 20%);
+  overscroll-behavior: contain;
+  transform: translate(-50%, -50%);
 }
 
 .action-dialog::backdrop {

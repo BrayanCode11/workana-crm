@@ -1,6 +1,7 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { LoaderCircle, Trash2 } from "lucide-react";
+import { useFormStatus } from "react-dom";
 import { deleteOpportunityAction } from "./actions";
 
 export function DeleteOpportunityButton({ opportunityId }: { opportunityId: string }) {
@@ -15,11 +16,17 @@ export function DeleteOpportunityButton({ opportunityId }: { opportunityId: stri
         }
       }}
     >
-      <button className="danger-button" type="submit">
-        <Trash2 size={15} aria-hidden="true" />
-        Eliminar oportunidad
-      </button>
+      <DeleteOpportunitySubmit />
     </form>
   );
 }
 
+function DeleteOpportunitySubmit() {
+  const { pending } = useFormStatus();
+  return (
+    <button className="danger-button" disabled={pending} type="submit">
+      {pending ? <LoaderCircle className="spin" size={15} aria-hidden="true" /> : <Trash2 size={15} aria-hidden="true" />}
+      {pending ? "Eliminando…" : "Eliminar oportunidad"}
+    </button>
+  );
+}

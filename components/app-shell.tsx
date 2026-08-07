@@ -3,7 +3,7 @@
 import { LogOut, Menu, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { logout } from "@/app/auth/actions";
 import { navigation } from "@/lib/navigation";
 
@@ -49,9 +49,51 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLElement>(null);
+  const mobileAction = getMobileAction(pathname);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    function closeOnEscape(event: globalThis.KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+      previousFocus?.focus();
+    };
+  }, [menuOpen]);
+
+  function trapMenuFocus(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Tab") return;
+    const focusable = menuPanelRef.current?.querySelectorAll<HTMLElement>(
+      "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])",
+    );
+    if (!focusable?.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">Saltar al contenido principal</a>
       <aside className="sidebar">
         <div className="sidebar-brand">
           <Brand />
@@ -71,8 +113,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Brand />
         <button
           className="icon-button"
+          ref={menuButtonRef}
           type="button"
           aria-label="Abrir menú"
+          aria-controls="mobile-menu"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(true)}
         >
@@ -81,18 +125,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {menuOpen && (
-        <div className="mobile-menu-layer" role="dialog" aria-modal="true" aria-label="Menú">
+        <div className="mobile-menu-layer" id="mobile-menu" role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" onKeyDown={trapMenuFocus}>
           <button
             className="mobile-menu-backdrop"
             type="button"
+            tabIndex={-1}
             aria-label="Cerrar menú"
             onClick={() => setMenuOpen(false)}
           />
-          <aside className="mobile-menu-panel">
+          <aside className="mobile-menu-panel" ref={menuPanelRef}>
             <div className="mobile-menu-heading">
+              <h2 className="sr-only" id="mobile-menu-title">Navegación principal</h2>
               <Brand />
               <button
                 className="icon-button"
+                ref={closeButtonRef}
                 type="button"
                 aria-label="Cerrar menú"
                 onClick={() => setMenuOpen(false)}
@@ -111,14 +158,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main className="main-content">
+      <main className="main-content" id="main-content" tabIndex={-1}>
         <div className="content-frame">{children}</div>
       </main>
 
-      <Link className="mobile-create-button" href="/opportunities/new">
-        <Plus size={18} aria-hidden="true" />
-        <span>Nueva oportunidad</span>
-      </Link>
+      {mobileAction && (
+        <Link className="mobile-create-button" href={mobileAction.href}>
+          <Plus size={18} aria-hidden="true" />
+          <span>{mobileAction.label}</span>
+        </Link>
+      )}
     </div>
   );
+}
+
+function getMobileAction(pathname: string) {
+  if (pathname.endsWith("/new") || pathname.endsWith("/edit")) return null;
+  if (pathname === "/clients") return { href: "/clients/new", label: "Nuevo cliente" };
+  if (pathname === "/experiments") return { href: "/experiments/new", label: "Nuevo experimento" };
+
+  const clientDetail = pathname.match(/^\/clients\/([^/]+)$/);
+  if (clientDetail) {
+    return { href: `/opportunities/new?client=${clientDetail[1]}`, label: "Nueva oportunidad" };
+  }
+
+  const experimentDetail = pathname.match(/^\/experiments\/([^/]+)$/);
+  if (experimentDetail) {
+    return { href: `/experiments/${experimentDetail[1]}/variants/new`, label: "Nueva variante" };
+  }
+
+  return { href: "/opportunities/new", label: "Nueva oportunidad" };
 }

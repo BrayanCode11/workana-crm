@@ -38,7 +38,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps<"/op
         actions={<PrimaryLink href="/opportunities/new">Nueva oportunidad</PrimaryLink>}
       />
 
-      {deleted && <div className="feedback-banner feedback-success">Oportunidad eliminada correctamente.</div>}
+      {deleted && <div className="feedback-banner feedback-success" role="status">Oportunidad eliminada correctamente.</div>}
 
       <section className="panel">
         <form className="table-toolbar opportunity-toolbar" method="get">

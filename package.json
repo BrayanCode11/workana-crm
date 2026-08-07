@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test features/*/*.test.ts",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "db:reset": "supabase db reset",
@@ -32,6 +33,7 @@
     "eslint-config-next": "^16.3.0",
     "supabase": "^2.111.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.11",
     "typescript": "^6.0.3"
   }
 }

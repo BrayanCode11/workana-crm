@@ -57,6 +57,25 @@ a {
   outline-offset: 2px;
 }
 
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 9px 13px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: white;
+  font-size: 11px;
+  font-weight: 680;
+  transform: translateY(-150%);
+  transition: transform 120ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 .app-shell {
   min-height: 100vh;
 }
@@ -1622,6 +1641,35 @@ a {
 .danger-button:disabled {
   cursor: not-allowed;
   opacity: 0.48;
+}
+
+.delete-action-stack {
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+}
+
+.delete-action-stack p {
+  margin: 0;
+  text-align: right;
+}
+
+.standalone-state-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+}
+
+.standalone-state-page > .panel {
+  width: min(100%, 520px);
+}
+
+.standalone-state-page .empty-state h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 680;
+  letter-spacing: -0.025em;
 }
 
 .skeleton {

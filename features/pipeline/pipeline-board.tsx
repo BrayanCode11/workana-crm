@@ -143,7 +143,7 @@ export function PipelineBoard({
   return (
     <>
       {feedback && (
-        <div className={`feedback-banner ${feedback.tone === "success" ? "feedback-success" : "feedback-error"}`} role="status">
+        <div className={`feedback-banner ${feedback.tone === "success" ? "feedback-success" : "feedback-error"}`} role={feedback.tone === "success" ? "status" : "alert"}>
           {feedback.message}
         </div>
       )}
@@ -354,6 +354,8 @@ function PipelineClosureDialog({
 
   return (
     <dialog
+      aria-labelledby={`pipeline-closure-title-${opportunity.id}`}
+      aria-describedby={`pipeline-closure-description-${opportunity.id}`}
       className="action-dialog"
       ref={dialogRef}
       onCancel={(event) => {
@@ -372,10 +374,10 @@ function PipelineClosureDialog({
     >
       <form className="action-dialog-card" onSubmit={handleSubmit}>
         <div className="action-dialog-heading">
-          <div><span>Cierre de oportunidad</span><h2>{request.stage === "won" ? "Marcar como ganada" : "Marcar como perdida"}</h2></div>
+          <div><span>Cierre de oportunidad</span><h2 id={`pipeline-closure-title-${opportunity.id}`}>{request.stage === "won" ? "Marcar como ganada" : "Marcar como perdida"}</h2></div>
           <button aria-label="Cerrar" disabled={pending} onClick={() => { dialogRef.current?.close(); onCancel(); }} type="button">×</button>
         </div>
-        <p className="action-dialog-description">Completa el cierre de <strong>{opportunity.title}</strong>. Sus hitos anteriores se conservarán.</p>
+        <p className="action-dialog-description" id={`pipeline-closure-description-${opportunity.id}`}>Completa el cierre de <strong>{opportunity.title}</strong>. Sus hitos anteriores se conservarán.</p>
         {error && <p className="form-error" role="alert">{error}</p>}
 
         {request.stage === "won" ? (

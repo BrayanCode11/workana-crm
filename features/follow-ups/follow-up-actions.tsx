@@ -36,9 +36,9 @@ export function FollowUpActions({
   const [rescheduleState, rescheduleFormAction, reschedulePending] = useActionState(rescheduleAction, initialState);
   const [lostState, lostFormAction, lostPending] = useActionState(lostAction, initialState);
   const nextFollowUp = opportunity.stage === "contacted"
-    ? { label: "Registrar seguimiento 1", confirm: "¿Confirmas que ya enviaste el Seguimiento 1?" }
+    ? { label: "Registrar seguimiento 1" }
     : opportunity.stage === "follow_up_1"
-      ? { label: "Registrar seguimiento 2", confirm: "¿Confirmas que ya enviaste el Seguimiento 2?" }
+      ? { label: "Registrar seguimiento 2" }
       : null;
   const canMarkResponded = ["contacted", "follow_up_1", "follow_up_2"].includes(opportunity.stage);
   const noResponseReason = lostReasons.find((reason) => reason.slug === "no_response");
@@ -52,12 +52,7 @@ export function FollowUpActions({
           <Link href={`/opportunities/${opportunity.id}`}><ExternalLink size={14} /> Abrir oportunidad</Link>
 
           {nextFollowUp && (
-            <form
-              action={registerAction}
-              onSubmit={(event) => {
-                if (!window.confirm(nextFollowUp.confirm)) event.preventDefault();
-              }}
-            >
+            <form action={registerAction}>
               <MenuSubmitButton icon="check" label={nextFollowUp.label} />
             </form>
           )}
@@ -67,14 +62,7 @@ export function FollowUpActions({
           </button>
 
           {canMarkResponded && (
-            <form
-              action={respondedAction}
-              onSubmit={(event) => {
-                if (!window.confirm("¿Confirmas que el cliente respondió? Se cancelará este seguimiento pendiente.")) {
-                  event.preventDefault();
-                }
-              }}
-            >
+            <form action={respondedAction}>
               <MenuSubmitButton icon="reply" label="Marcar respondió" />
             </form>
           )}
@@ -86,6 +74,8 @@ export function FollowUpActions({
       </details>
 
       <dialog
+        aria-labelledby={`reschedule-title-${opportunity.id}`}
+        aria-describedby={`reschedule-description-${opportunity.id}`}
         className="action-dialog"
         ref={rescheduleDialog}
         onClick={(event) => {
@@ -94,10 +84,10 @@ export function FollowUpActions({
       >
         <form action={rescheduleFormAction} className="action-dialog-card">
           <div className="action-dialog-heading">
-            <div><span>Seguimiento</span><h2>Reprogramar contacto</h2></div>
+            <div><span>Seguimiento</span><h2 id={`reschedule-title-${opportunity.id}`}>Reprogramar contacto</h2></div>
             <button aria-label="Cerrar" onClick={() => rescheduleDialog.current?.close()} type="button">×</button>
           </div>
-          <p className="action-dialog-description">Elige cuándo quieres volver a contactar por <strong>{opportunity.title}</strong>.</p>
+          <p className="action-dialog-description" id={`reschedule-description-${opportunity.id}`}>Elige cuándo quieres volver a contactar por <strong>{opportunity.title}</strong>.</p>
           {rescheduleState.message && <p className="form-error" role="alert">{rescheduleState.message}</p>}
           <div className="field-group">
             <label htmlFor={`schedule-${opportunity.id}`}>Nueva fecha y hora</label>
@@ -123,6 +113,8 @@ export function FollowUpActions({
       </dialog>
 
       <dialog
+        aria-labelledby={`lost-title-${opportunity.id}`}
+        aria-describedby={`lost-description-${opportunity.id}`}
         className="action-dialog"
         ref={lostDialog}
         onClick={(event) => {
@@ -131,10 +123,10 @@ export function FollowUpActions({
       >
         <form action={lostFormAction} className="action-dialog-card">
           <div className="action-dialog-heading">
-            <div><span>Cierre</span><h2>Marcar como perdida</h2></div>
+            <div><span>Cierre</span><h2 id={`lost-title-${opportunity.id}`}>Marcar como perdida</h2></div>
             <button aria-label="Cerrar" onClick={() => lostDialog.current?.close()} type="button">×</button>
           </div>
-          <p className="action-dialog-description">El seguimiento pendiente se cancelará y conservarás los hitos anteriores.</p>
+          <p className="action-dialog-description" id={`lost-description-${opportunity.id}`}>El seguimiento pendiente se cancelará y conservarás los hitos anteriores.</p>
           {lostState.message && <p className="form-error" role="alert">{lostState.message}</p>}
           <div className="field-group">
             <label htmlFor={`lost-date-${opportunity.id}`}>Fecha de cierre</label>

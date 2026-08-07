@@ -73,7 +73,7 @@ export default async function OpportunityDetailPage({
         <div className="page-actions">
           {opportunity.workana_url && (
             <a className="button" href={opportunity.workana_url} target="_blank" rel="noreferrer">
-              <ExternalLink size={15} /> Workana
+              <ExternalLink size={15} aria-hidden="true" /> Workana <span className="sr-only">(abre en una pestaña nueva)</span>
             </a>
           )}
           <Link className="button button-primary" href={`/opportunities/${opportunity.id}/edit`}>
@@ -82,8 +82,8 @@ export default async function OpportunityDetailPage({
         </div>
       </header>
 
-      {feedback && <div className="feedback-banner feedback-success">{feedback}</div>}
-      {stageError && <div className="feedback-banner feedback-error">No pudimos actualizar la etapa. Intenta nuevamente.</div>}
+      {feedback && <div className="feedback-banner feedback-success" role="status">{feedback}</div>}
+      {stageError && <div className="feedback-banner feedback-error" role="alert">No pudimos actualizar la etapa. Intenta nuevamente.</div>}
 
       <section className="opportunity-summary" aria-label="Resumen de la oportunidad">
         <div><span>Etapa</span><strong>{stageLabel(opportunity.stage)}</strong></div>
@@ -102,7 +102,7 @@ export default async function OpportunityDetailPage({
             <div>
               <dt>Enlace</dt>
               <dd>{opportunity.workana_url ? (
-                <a className="external-link" href={opportunity.workana_url} target="_blank" rel="noreferrer">Abrir en Workana <ExternalLink size={13} /></a>
+                <a className="external-link" href={opportunity.workana_url} target="_blank" rel="noreferrer">Abrir en Workana <ExternalLink size={13} aria-hidden="true" /><span className="sr-only">(abre en una pestaña nueva)</span></a>
               ) : "—"}</dd>
             </div>
           </dl>

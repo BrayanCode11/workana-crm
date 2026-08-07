@@ -27,7 +27,7 @@ export default async function ClientsPage({ searchParams }: PageProps<"/clients"
         actions={<PrimaryLink href="/clients/new">Nuevo cliente</PrimaryLink>}
       />
 
-      {deleted && <div className="feedback-banner feedback-success">Cliente eliminado correctamente.</div>}
+      {deleted && <div className="feedback-banner feedback-success" role="status">Cliente eliminado correctamente.</div>}
 
       <section className="panel">
         <form className="table-toolbar" method="get">

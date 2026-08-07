@@ -37,7 +37,7 @@ export function VariantForm({
       <div className="form-grid">
         <div className="field-group">
           <label htmlFor="code">Código <span aria-hidden="true">*</span></label>
-          <input id="code" name="code" defaultValue={values?.code} maxLength={20} required disabled={pending} autoFocus placeholder="A" aria-invalid={Boolean(state.errors?.code)} aria-describedby={state.errors?.code ? "code-error" : "code-help"} />
+          <input id="code" name="code" defaultValue={values?.code} maxLength={20} required disabled={pending} autoFocus placeholder="A" aria-invalid={Boolean(state.errors?.code)} aria-describedby={state.errors?.code ? "code-error code-help" : "code-help"} />
           <span className="field-help" id="code-help">Debe ser único dentro de este experimento.</span>
           <FieldError field="code" state={state} />
         </div>
@@ -50,7 +50,7 @@ export function VariantForm({
 
         <div className="field-group form-field-wide">
           <label htmlFor="description">Descripción de la estrategia</label>
-          <textarea id="description" name="description" rows={5} maxLength={5000} defaultValue={values?.description ?? ""} disabled={pending} placeholder="Describe la estrategia, sin guardar mensajes, prompts ni conversaciones…" aria-invalid={Boolean(state.errors?.description)} />
+          <textarea id="description" name="description" rows={5} maxLength={5000} defaultValue={values?.description ?? ""} disabled={pending} placeholder="Describe la estrategia, sin guardar mensajes, prompts ni conversaciones…" aria-invalid={Boolean(state.errors?.description)} aria-describedby={state.errors?.description ? "description-error" : undefined} />
           <FieldError field="description" state={state} />
         </div>
 

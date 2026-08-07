@@ -27,6 +27,7 @@ export default async function ExperimentsPage({ searchParams }: PageProps<"/expe
   const status = stringParam(params.status);
   const experiments = await getExperiments(query, status);
   const hasFilters = Boolean(query || status);
+  const deleted = params.deleted === "1";
 
   return (
     <>
@@ -36,6 +37,8 @@ export default async function ExperimentsPage({ searchParams }: PageProps<"/expe
         description="Compara estrategias de contacto usando resultados reales y el tamaño de cada muestra."
         actions={<PrimaryLink href="/experiments/new">Nuevo experimento</PrimaryLink>}
       />
+
+      {deleted && <div className="feedback-banner feedback-success" role="status">Experimento eliminado correctamente.</div>}
 
       <section className="panel">
         <form className="table-toolbar" method="get">

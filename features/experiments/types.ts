@@ -41,6 +41,10 @@ export type VariantFormState = {
   errors?: Partial<Record<VariantFormField, string>>;
 };
 
+export type DeleteExperimentState = {
+  message?: string;
+};
+
 export type ExperimentMetrics = {
   assigned: number;
   contacted: number;

@@ -4,12 +4,12 @@ CRM personal, simple y enfocado en organizar la prospección, los seguimientos y
 
 ## Estado actual
 
-La base visual y la infraestructura de Supabase están terminadas. El proyecto incluye:
+La aplicación funcional incluye:
 
 - Next.js con App Router, React y TypeScript estricto.
 - Tailwind CSS y un sistema visual responsive propio.
 - Navegación principal para Dashboard, Oportunidades, Pipeline, Seguimientos, Clientes y Experimentos.
-- Estados vacíos y estructuras iniciales de tabla, métricas y Kanban.
+- Estados vacíos, carga progresiva, recuperación de errores y feedback accesible.
 - Sesiones de Supabase Auth almacenadas en cookies.
 - Login privado, logout, renovación de sesión y protección de rutas.
 - Esquema PostgreSQL versionado con integridad referencial y RLS.
@@ -27,9 +27,8 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Experimentos con estados, variantes activables y analítica comparativa basada en hitos reales.
 - Tasas por variante acompañadas por su muestra y valores ganados agrupados por moneda.
 - Dashboard operativo con KPIs históricos, agenda prioritaria, pipeline y resumen de clientes.
-- ESLint y comandos separados para lint, typecheck y build.
-
-Los módulos CRUD se incorporarán progresivamente sobre esta base segura.
+- Navegación por teclado, alternativa al drag and drop, foco controlado y acciones móviles contextuales.
+- Pruebas automatizadas para métricas y fechas, además de lint, typecheck y build.
 
 ## Stack
 
@@ -63,6 +62,7 @@ Abre [http://localhost:3000](http://localhost:3000). Las variables de Supabase d
 npm run dev        # servidor de desarrollo
 npm run lint       # análisis estático
 npm run typecheck  # comprobación de TypeScript
+npm test           # pruebas de métricas y fechas
 npm run build      # build de producción
 npm run start      # ejecutar el build
 npm run db:push    # aplicar migraciones al proyecto Supabase enlazado
@@ -102,8 +102,9 @@ No guardes el access token, la contraseña de PostgreSQL ni claves `secret`/`ser
 
 ```text
 app/                    Rutas, layouts y estilos globales
-  (workspace)/          Área privada del CRM (protección en Fase 3)
+  (workspace)/          Área privada del CRM
 components/             Componentes visuales compartidos
+features/               Lógica, consultas, acciones y UI por módulo
 lib/                    Configuración y utilidades sin UI
   supabase/             Clientes browser, server y renovación de sesión
 public/                 Recursos estáticos
@@ -111,9 +112,9 @@ supabase/               Configuración local y migraciones versionadas
 proxy.ts                Renovación de sesión y redirects optimistas
 ```
 
-Se prefieren Server Components. Los Client Components se reservan para navegación móvil y futuras interacciones que requieran estado del navegador.
+Se prefieren Server Components. Los Client Components se reservan para formularios interactivos, navegación móvil, diálogos y drag and drop.
 
-## Base de datos y modelo previsto
+## Base de datos
 
 El modelo incluye perfiles, clientes, oportunidades, notas, experimentos, variantes y motivos de pérdida. `client_id` es opcional; las tecnologías son un arreglo simple de texto y las monedas nunca se agregan entre sí sin agruparlas.
 
@@ -121,4 +122,4 @@ Las relaciones compuestas garantizan que cliente, oportunidad, nota, experimento
 
 ## Build y despliegue
 
-Antes de cada entrega importante se ejecutan lint, typecheck y build. El despliegue en Vercel se realizará al final, después de validar autenticación, RLS y flujos funcionales en local. Las variables de Supabase se configurarán separadamente en Vercel y nunca se incluirán en el repositorio.
+Antes de cada entrega importante se ejecutan tests, lint, typecheck y build. La rama `main` está conectada a Vercel; cada publicación inicia un nuevo despliegue. Las variables de Supabase se configuran separadamente en Vercel y nunca se incluyen en el repositorio.

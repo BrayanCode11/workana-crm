@@ -33,7 +33,7 @@ export function OpportunityNotes({
         <span className="section-count" aria-label={`${notes.length} notas`}>{notes.length}</span>
       </div>
 
-      {feedback && <div className="feedback-banner feedback-success note-feedback">{feedback}</div>}
+      {feedback && <div className="feedback-banner feedback-success note-feedback" role="status">{feedback}</div>}
 
       <form action={formAction} className="panel note-composer">
         <label htmlFor="new-note">Añadir nota</label>

@@ -53,7 +53,7 @@ export function ExperimentForm({
 
         <div className="field-group">
           <label htmlFor="status">Estado <span aria-hidden="true">*</span></label>
-          <select id="status" name="status" defaultValue={initialStatus} required disabled={pending} aria-invalid={Boolean(state.errors?.status)}>
+          <select id="status" name="status" defaultValue={initialStatus} required disabled={pending} aria-invalid={Boolean(state.errors?.status)} aria-describedby={state.errors?.status ? "status-error" : undefined}>
             {experimentStatuses.map((status) => <option key={status} value={status}>{experimentStatusLabels[status]}</option>)}
           </select>
           <FieldError field="status" state={state} />
@@ -61,15 +61,15 @@ export function ExperimentForm({
 
         <div className="field-group">
           <label htmlFor="started_at">Fecha de inicio</label>
-          <input id="started_at" name="started_at" type="date" defaultValue={values?.started_at ?? today} disabled={pending} aria-invalid={Boolean(state.errors?.started_at)} />
+          <input id="started_at" name="started_at" type="date" defaultValue={values?.started_at ?? today} disabled={pending} aria-invalid={Boolean(state.errors?.started_at)} aria-describedby={state.errors?.started_at ? "started_at-error" : undefined} />
           <FieldError field="started_at" state={state} />
         </div>
 
         <div className="field-group">
           <label htmlFor="ended_at">Fecha de finalización</label>
-          <input id="ended_at" name="ended_at" type="date" defaultValue={values?.ended_at ?? ""} disabled={pending} aria-invalid={Boolean(state.errors?.ended_at)} />
+          <input id="ended_at" name="ended_at" type="date" defaultValue={values?.ended_at ?? ""} disabled={pending} aria-invalid={Boolean(state.errors?.ended_at)} aria-describedby={state.errors?.ended_at ? "ended_at-error ended-at-help" : "ended-at-help"} />
           <FieldError field="ended_at" state={state} />
-          <span className="field-help">Es obligatoria cuando el estado es Finalizado.</span>
+          <span className="field-help" id="ended-at-help">Es obligatoria cuando el estado es Finalizado.</span>
         </div>
       </div>
 

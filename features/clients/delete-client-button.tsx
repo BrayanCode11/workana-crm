@@ -1,6 +1,7 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { LoaderCircle, Trash2 } from "lucide-react";
+import { useFormStatus } from "react-dom";
 import { deleteClientAction } from "./actions";
 
 export function DeleteClientButton({
@@ -21,10 +22,17 @@ export function DeleteClientButton({
         }
       }}
     >
-      <button className="danger-button" disabled={disabled} type="submit">
-        <Trash2 size={15} aria-hidden="true" />
-        Eliminar cliente
-      </button>
+      <DeleteClientSubmit disabled={disabled} />
     </form>
+  );
+}
+
+function DeleteClientSubmit({ disabled }: { disabled: boolean }) {
+  const { pending } = useFormStatus();
+  return (
+    <button className="danger-button" disabled={disabled || pending} type="submit">
+      {pending ? <LoaderCircle className="spin" size={15} aria-hidden="true" /> : <Trash2 size={15} aria-hidden="true" />}
+      {pending ? "Eliminando…" : "Eliminar cliente"}
+    </button>
   );
 }

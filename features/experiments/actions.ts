@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { parseExperimentForm, parseVariantForm } from "./schema";
-import type { ExperimentFormState, VariantFormState } from "./types";
+import type { DeleteExperimentState, ExperimentFormState, VariantFormState } from "./types";
 
 function refreshExperimentPaths(experimentId?: string) {
   revalidatePath("/experiments");
@@ -128,4 +128,45 @@ export async function updateVariantAction(
 
   refreshExperimentPaths(experimentId);
   redirect(`/experiments/${experimentId}?variant_updated=1`);
+}
+
+export async function deleteExperimentAction(
+  experimentId: string,
+  _previousState: DeleteExperimentState,
+  _formData: FormData,
+): Promise<DeleteExperimentState> {
+  void _previousState;
+  void _formData;
+  const { userId } = await requireUser();
+  const supabase = await createClient();
+  const { count, error: countError } = await supabase
+    .from("opportunities")
+    .select("id", { count: "exact", head: true })
+    .eq("experiment_id", experimentId)
+    .eq("user_id", userId);
+
+  if (countError) {
+    console.error("Unable to validate experiment deletion", { code: countError.code });
+    return { message: "No pudimos comprobar las oportunidades asociadas." };
+  }
+  if ((count ?? 0) > 0) {
+    return { message: "No puedes eliminar un experimento con oportunidades asociadas." };
+  }
+
+  const { data, error } = await supabase
+    .from("experiments")
+    .delete()
+    .eq("id", experimentId)
+    .eq("user_id", userId)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    console.error("Unable to delete experiment", { code: error?.code });
+    return { message: "No pudimos eliminar el experimento." };
+  }
+
+  revalidatePath("/experiments");
+  revalidatePath("/opportunities");
+  redirect("/experiments?deleted=1");
 }

@@ -7,6 +7,7 @@ import {
   experimentStatusLabels,
   experimentStatusTone,
 } from "@/features/experiments/constants";
+import { DeleteExperimentButton } from "@/features/experiments/delete-experiment-button";
 import { getExperiment } from "@/features/experiments/queries";
 import {
   formatExperimentPeriod,
@@ -64,7 +65,7 @@ export default async function ExperimentDetailPage({
         </div>
       </header>
 
-      {feedback && <div className="feedback-banner feedback-success">{feedback}</div>}
+      {feedback && <div className="feedback-banner feedback-success" role="status">{feedback}</div>}
 
       <section className="experiment-summary" aria-label="Resumen del experimento">
         <div><span>Oportunidades</span><strong>{metrics.assigned}</strong></div>
@@ -164,10 +165,18 @@ export default async function ExperimentDetailPage({
       </aside>
 
       {withoutVariant > 0 && (
-        <div className="feedback-banner feedback-error section">
+        <div className="feedback-banner feedback-error section" role="status">
           {withoutVariant} {withoutVariant === 1 ? "oportunidad está asociada" : "oportunidades están asociadas"} al experimento sin una variante. Edítala para que sus resultados entren en la comparación.
         </div>
       )}
+
+      <section className="danger-zone section">
+        <div>
+          <h2>Eliminar experimento</h2>
+          <p>{metrics.assigned > 0 ? "No puede eliminarse mientras tenga oportunidades asociadas." : "Elimina definitivamente el experimento y todas sus variantes."}</p>
+        </div>
+        <DeleteExperimentButton experimentId={experiment.id} disabled={metrics.assigned > 0} />
+      </section>
     </>
   );
 }

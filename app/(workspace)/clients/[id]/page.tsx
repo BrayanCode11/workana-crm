@@ -53,7 +53,7 @@ export default async function ClientDetailPage({
         </div>
       </header>
 
-      {feedback && <div className="feedback-banner feedback-success">{feedback}</div>}
+      {feedback && <div className="feedback-banner feedback-success" role="status">{feedback}</div>}
 
       <section className="client-metrics" aria-label="Resumen del cliente">
         <div><span>Oportunidades</span><strong>{metrics.total}</strong></div>
@@ -74,7 +74,7 @@ export default async function ClientDetailPage({
               <dt>Perfil Workana</dt>
               <dd>{client.workana_profile_url ? (
                 <a className="external-link" href={client.workana_profile_url} target="_blank" rel="noreferrer">
-                  Abrir perfil <ExternalLink size={13} />
+                  Abrir perfil <ExternalLink size={13} aria-hidden="true" /><span className="sr-only">(abre en una pestaña nueva)</span>
                 </a>
               ) : "—"}</dd>
             </div>

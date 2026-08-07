@@ -53,8 +53,8 @@ export default async function FollowUpsPage({ searchParams }: PageProps<"/follow
         description="Una lista clara de las personas a las que debes escribir y cuándo hacerlo."
       />
 
-      {feedback && <div className="feedback-banner feedback-success">{feedback}</div>}
-      {actionError && <div className="feedback-banner feedback-error">La oportunidad cambió o ya no admite esta acción. Actualiza e intenta nuevamente.</div>}
+      {feedback && <div className="feedback-banner feedback-success" role="status">{feedback}</div>}
+      {actionError && <div className="feedback-banner feedback-error" role="alert">La oportunidad cambió o ya no admite esta acción. Actualiza e intenta nuevamente.</div>}
 
       <nav className="follow-up-tabs" aria-label="Periodo de seguimiento">
         {periods.map((period) => (

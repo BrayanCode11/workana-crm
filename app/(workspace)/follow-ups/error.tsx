@@ -1,15 +1,7 @@
 "use client";
 
-import { CircleAlert, RotateCcw } from "lucide-react";
+import { RouteError } from "@/components/route-error";
 
-export default function FollowUpsError({ reset }: { reset: () => void }) {
-  return (
-    <div className="panel empty-state">
-      <span className="empty-icon" aria-hidden="true"><CircleAlert size={21} /></span>
-      <h2>No pudimos cargar los seguimientos</h2>
-      <p>Comprueba tu conexión e intenta nuevamente.</p>
-      <button className="button" onClick={reset} type="button"><RotateCcw size={15} /> Reintentar</button>
-    </div>
-  );
+export default function FollowUpsError({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
+  return <RouteError error={error} retry={retry} title="No pudimos cargar los seguimientos" />;
 }
-

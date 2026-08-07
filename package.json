@@ -7,9 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push",
+    "db:lint": "supabase db lint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.4",
     "lucide-react": "^1.29.0",
     "next": "^16.3.0",
     "react": "^19.2.8",
@@ -22,6 +28,7 @@
     "@types/react-dom": "^19.2.4",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.0",
+    "supabase": "^2.111.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   }

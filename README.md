@@ -4,15 +4,18 @@ CRM personal, simple y enfocado en organizar la prospección, los seguimientos y
 
 ## Estado actual
 
-La Fase 0 y la base del sistema visual están terminadas. El proyecto incluye:
+La base visual y la infraestructura de Supabase están terminadas. El proyecto incluye:
 
 - Next.js con App Router, React y TypeScript estricto.
 - Tailwind CSS y un sistema visual responsive propio.
 - Navegación principal para Dashboard, Oportunidades, Pipeline, Seguimientos, Clientes y Experimentos.
 - Estados vacíos y estructuras iniciales de tabla, métricas y Kanban.
+- Sesiones de Supabase Auth almacenadas en cookies.
+- Login privado, logout, renovación de sesión y protección de rutas.
+- Esquema PostgreSQL versionado con integridad referencial y RLS.
 - ESLint y comandos separados para lint, typecheck y build.
 
-La persistencia, autenticación y funcionalidad CRUD se incorporarán a partir de la conexión con Supabase.
+Los módulos CRUD se incorporarán progresivamente sobre esta base segura.
 
 ## Stack
 
@@ -47,6 +50,8 @@ npm run lint       # análisis estático
 npm run typecheck  # comprobación de TypeScript
 npm run build      # build de producción
 npm run start      # ejecutar el build
+npm run db:push    # aplicar migraciones al proyecto Supabase enlazado
+npm run db:lint    # analizar el esquema PostgreSQL
 ```
 
 ## Variables de entorno
@@ -62,9 +67,21 @@ Usa `.env.local` para valores reales. Los archivos `.env*`, excepto `.env.exampl
 
 ## Supabase
 
-Supabase se configurará en la Fase 2. Las migraciones versionadas vivirán en `supabase/migrations/` e incluirán tablas, constraints, índices, catálogo de motivos de pérdida y políticas RLS. No se crearán tablas manualmente sin una migración equivalente.
+Las migraciones versionadas viven en `supabase/migrations/` e incluyen tablas, constraints, índices, catálogo de motivos de pérdida, triggers comerciales y políticas RLS. No se crean tablas manualmente sin una migración equivalente.
 
-La autenticación usará Supabase Auth con rutas privadas. Cada tabla de usuario tendrá Row Level Security para que cada cuenta solo acceda a sus propios registros.
+La autenticación usa Supabase Auth con sesiones SSR en cookies. `proxy.ts` renueva la sesión y realiza redirecciones tempranas; `lib/auth.ts` verifica acceso en servidor y RLS garantiza que cada cuenta solo acceda a sus propios registros.
+
+En el proyecto alojado, revisa **Authentication → Sign In / Providers → Email** y mantén habilitado el proveedor Email. El registro público está desactivado; los usuarios se crean manualmente desde **Authentication → Users** y deben tener el correo confirmado.
+
+Para trabajar contra un proyecto remoto:
+
+```bash
+npx supabase login
+npx supabase link --project-ref TU_PROJECT_REF
+npm run db:push
+```
+
+No guardes el access token, la contraseña de PostgreSQL ni claves `secret`/`service_role` en el repositorio.
 
 ## Arquitectura
 
@@ -73,15 +90,19 @@ app/                    Rutas, layouts y estilos globales
   (workspace)/          Área privada del CRM (protección en Fase 3)
 components/             Componentes visuales compartidos
 lib/                    Configuración y utilidades sin UI
+  supabase/             Clientes browser, server y renovación de sesión
 public/                 Recursos estáticos
-supabase/               Migraciones y configuración (Fase 2)
+supabase/               Configuración local y migraciones versionadas
+proxy.ts                Renovación de sesión y redirects optimistas
 ```
 
 Se prefieren Server Components. Los Client Components se reservan para navegación móvil y futuras interacciones que requieran estado del navegador.
 
 ## Base de datos y modelo previsto
 
-El modelo se implementará después de revisarlo en la Fase 2. Sus entidades centrales serán perfiles, clientes, oportunidades, notas, experimentos, variantes y motivos de pérdida. `client_id` será opcional; las tecnologías se mantendrán como un arreglo simple de texto y las monedas nunca se agregarán entre sí sin agruparlas.
+El modelo incluye perfiles, clientes, oportunidades, notas, experimentos, variantes y motivos de pérdida. `client_id` es opcional; las tecnologías son un arreglo simple de texto y las monedas nunca se agregan entre sí sin agruparlas.
+
+Las relaciones compuestas garantizan que cliente, oportunidad, nota, experimento y variante pertenezcan al mismo usuario. Los clientes con oportunidades no pueden eliminarse accidentalmente. Los timestamps comerciales se registran la primera vez que se alcanza cada evento y se conservan aunque cambie la etapa actual.
 
 ## Build y despliegue
 

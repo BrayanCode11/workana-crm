@@ -1,9 +1,10 @@
 "use client";
 
-import { Menu, Plus, X } from "lucide-react";
+import { LogOut, Menu, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { logout } from "@/app/auth/actions";
 import { navigation } from "@/lib/navigation";
 
 function Brand() {
@@ -57,8 +58,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <Navigation />
         <div className="sidebar-footer">
-          <span className="status-dot" aria-hidden="true" />
-          <span>Base local preparada</span>
+          <form action={logout}>
+            <button className="logout-button" type="submit">
+              <LogOut size={15} strokeWidth={1.8} aria-hidden="true" />
+              Cerrar sesión
+            </button>
+          </form>
         </div>
       </aside>
 
@@ -96,6 +101,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </button>
             </div>
             <Navigation onNavigate={() => setMenuOpen(false)} />
+            <form action={logout} className="mobile-logout-form">
+              <button className="logout-button" type="submit">
+                <LogOut size={16} strokeWidth={1.8} aria-hidden="true" />
+                Cerrar sesión
+              </button>
+            </form>
           </aside>
         </div>
       )}

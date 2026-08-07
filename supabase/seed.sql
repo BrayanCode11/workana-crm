@@ -1,0 +1,2 @@
+-- Reference data is inserted by the initial migration so local and hosted
+-- environments stay identical. Development-only seed data can be added here.

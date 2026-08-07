@@ -26,6 +26,7 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Hitos comerciales históricos inmutables aunque una oportunidad vuelva a una etapa anterior.
 - Experimentos con estados, variantes activables y analítica comparativa basada en hitos reales.
 - Tasas por variante acompañadas por su muestra y valores ganados agrupados por moneda.
+- Dashboard operativo con KPIs históricos, agenda prioritaria, pipeline y resumen de clientes.
 - ESLint y comandos separados para lint, typecheck y build.
 
 Los módulos CRUD se incorporarán progresivamente sobre esta base segura.

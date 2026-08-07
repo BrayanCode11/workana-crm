@@ -1,0 +1,14 @@
+"use client";
+
+import { CircleAlert, RotateCcw } from "lucide-react";
+
+export default function ClientsError({ reset }: { reset: () => void }) {
+  return (
+    <div className="panel empty-state">
+      <span className="empty-icon" aria-hidden="true"><CircleAlert size={21} /></span>
+      <h2>No pudimos cargar los clientes</h2>
+      <p>Comprueba tu conexión e intenta nuevamente.</p>
+      <button className="button" onClick={reset} type="button"><RotateCcw size={15} /> Reintentar</button>
+    </div>
+  );
+}

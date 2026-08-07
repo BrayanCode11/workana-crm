@@ -13,6 +13,8 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Sesiones de Supabase Auth almacenadas en cookies.
 - Login privado, logout, renovación de sesión y protección de rutas.
 - Esquema PostgreSQL versionado con integridad referencial y RLS.
+- Clientes: listado, búsqueda, creación, edición, detalle y eliminación protegida.
+- Métricas de clientes calculadas desde oportunidades y agrupadas por moneda.
 - ESLint y comandos separados para lint, typecheck y build.
 
 Los módulos CRUD se incorporarán progresivamente sobre esta base segura.

@@ -24,6 +24,8 @@ La base visual y la infraestructura de Supabase están terminadas. El proyecto i
 - Pipeline Kanban con arrastre por puntero/teclado, actualización optimista, rollback y selector accesible.
 - Cierres ganados y perdidos con valor final, moneda, fecha, motivo y observaciones validadas.
 - Hitos comerciales históricos inmutables aunque una oportunidad vuelva a una etapa anterior.
+- Experimentos con estados, variantes activables y analítica comparativa basada en hitos reales.
+- Tasas por variante acompañadas por su muestra y valores ganados agrupados por moneda.
 - ESLint y comandos separados para lint, typecheck y build.
 
 Los módulos CRUD se incorporarán progresivamente sobre esta base segura.

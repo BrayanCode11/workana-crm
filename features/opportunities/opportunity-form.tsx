@@ -50,7 +50,8 @@ export function OpportunityForm({
   const [stage, setStage] = useState<OpportunityStage>(initialStage);
   const [experimentId, setExperimentId] = useState(values?.experiment_id ?? "");
   const [variantId, setVariantId] = useState(values?.experiment_variant_id ?? "");
-  const variants = options.experiments.find((experiment) => experiment.id === experimentId)?.experiment_variants ?? [];
+  const variants = (options.experiments.find((experiment) => experiment.id === experimentId)?.experiment_variants ?? [])
+    .filter((variant) => variant.is_active !== false || variant.id === values?.experiment_variant_id);
   const customProjectType = values?.project_type && !projectTypes.includes(values.project_type as (typeof projectTypes)[number])
     ? values.project_type
     : null;

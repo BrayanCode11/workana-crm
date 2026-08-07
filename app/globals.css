@@ -1994,6 +1994,197 @@ a {
   border-top: 1px solid var(--line);
 }
 
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-subtle);
+  cursor: pointer;
+}
+
+.checkbox-field input {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+
+.checkbox-field strong,
+.checkbox-field small {
+  display: block;
+}
+
+.checkbox-field strong {
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.checkbox-field small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.experiments-table {
+  min-width: 1040px;
+}
+
+.experiment-description-preview {
+  max-width: 330px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.experiment-toolbar-create {
+  color: var(--accent);
+  font-weight: 680;
+}
+
+.experiment-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.experiment-summary {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.experiment-summary > div {
+  min-height: 91px;
+  padding: 18px 19px;
+  border-right: 1px solid var(--line);
+}
+
+.experiment-summary > div:last-child {
+  border-right: 0;
+}
+
+.experiment-summary span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.experiment-summary strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+}
+
+.experiment-context {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(230px, 0.7fr);
+}
+
+.experiment-context > div {
+  min-height: 100px;
+  padding: 20px 22px;
+}
+
+.experiment-context > div + div {
+  border-left: 1px solid var(--line);
+}
+
+.experiment-context span {
+  display: block;
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.experiment-context p,
+.experiment-context strong {
+  display: block;
+  margin: 7px 0 0;
+  color: #4f5953;
+  font-size: 11px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.experiment-context strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.section-description {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.experiment-results-table {
+  min-width: 1680px;
+}
+
+.variant-name-cell {
+  min-width: 225px;
+}
+
+.rate-cell {
+  display: grid;
+  min-width: 90px;
+  gap: 5px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.rate-track {
+  display: block;
+  width: 78px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #e8ece9;
+}
+
+.rate-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.experiment-sample-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 17px 19px;
+  border: 1px solid #d9e4de;
+  border-radius: var(--radius);
+  background: #f7faf8;
+  color: var(--accent);
+}
+
+.experiment-sample-note svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.experiment-sample-note strong {
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.experiment-sample-note p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
 @media (max-width: 1050px) {
   .metrics-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2031,6 +2222,18 @@ a {
 
   .client-metrics > div:nth-child(4) {
     border-right: 0;
+  }
+
+  .experiment-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .experiment-summary > div:nth-child(3) {
+    border-right: 0;
+  }
+
+  .experiment-summary > div:nth-child(-n + 3) {
+    border-bottom: 1px solid var(--line);
   }
 }
 
@@ -2221,6 +2424,31 @@ a {
 
   .client-metrics > div:nth-child(4) {
     border-right: 0;
+  }
+
+  .experiment-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .experiment-summary > div:nth-child(3) {
+    border-right: 1px solid var(--line);
+  }
+
+  .experiment-summary > div:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .experiment-summary > div:nth-child(-n + 4) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .experiment-context {
+    grid-template-columns: 1fr;
+  }
+
+  .experiment-context > div + div {
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
   .client-value-metric {

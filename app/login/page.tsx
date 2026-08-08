@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LockKeyhole } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <main className="login-page">
+      <div className="login-theme-control"><ThemeToggle compact /></div>
       <section className="login-card" aria-labelledby="login-title">
         <div className="login-brand">
           <span className="brand-mark" aria-hidden="true">W</span>

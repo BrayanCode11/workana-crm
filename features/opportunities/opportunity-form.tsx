@@ -60,7 +60,14 @@ export function OpportunityForm({
   return (
     <form action={formAction} className="entity-form opportunity-form">
       {state.message && (
-        <p className="form-error form-message" role="alert">{state.message}</p>
+        <div className="form-error form-message" role="alert">
+          <p>{state.message}</p>
+          {state.duplicateOpportunityId && (
+            <Link className="inline-feedback-link" href={`/opportunities/${state.duplicateOpportunityId}`}>
+              Abrir oportunidad existente
+            </Link>
+          )}
+        </div>
       )}
 
       <fieldset className="form-section" disabled={pending}>
@@ -131,7 +138,7 @@ export function OpportunityForm({
             <input
               id="technologies"
               name="technologies"
-              defaultValue={values?.technologies.join(", ") ?? ""}
+              defaultValue={values?.technologies?.join(", ") ?? ""}
               placeholder="Next.js, Supabase, Stripe"
               maxLength={1000}
               aria-invalid={Boolean(state.errors?.technologies)}
@@ -139,6 +146,39 @@ export function OpportunityForm({
             />
             <span className="field-help" id="technologies-help">Separa cada tecnología con una coma.</span>
             <FieldError field="technologies" state={state} />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset className="form-section" disabled={pending}>
+        <legend>Contacto de la oportunidad</legend>
+        <p className="form-section-description">
+          Estos datos no crean ni asocian un cliente. Puedes registrar la oportunidad sin elegir un cliente real.
+        </p>
+        <div className="form-grid">
+          <div className="field-group">
+            <label htmlFor="contact_name">Nombre del contacto</label>
+            <input
+              id="contact_name"
+              name="contact_name"
+              defaultValue={values?.contact_name ?? ""}
+              maxLength={160}
+              aria-invalid={Boolean(state.errors?.contact_name)}
+              aria-describedby={describedBy("contact_name", state)}
+            />
+            <FieldError field="contact_name" state={state} />
+          </div>
+          <div className="field-group">
+            <label htmlFor="contact_country">País</label>
+            <input
+              id="contact_country"
+              name="contact_country"
+              defaultValue={values?.contact_country ?? ""}
+              maxLength={100}
+              aria-invalid={Boolean(state.errors?.contact_country)}
+              aria-describedby={describedBy("contact_country", state)}
+            />
+            <FieldError field="contact_country" state={state} />
           </div>
         </div>
       </fieldset>

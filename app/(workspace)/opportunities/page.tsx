@@ -1,4 +1,4 @@
-import { ArrowUpRight, BriefcaseBusiness, Search } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, ClipboardPaste, Search } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
@@ -35,13 +35,19 @@ export default async function OpportunitiesPage({ searchParams }: PageProps<"/op
         eyebrow="Prospección"
         title="Oportunidades"
         description="Organiza cada proyecto potencial desde que lo detectas hasta su cierre."
-        actions={<PrimaryLink href="/opportunities/new">Nueva oportunidad</PrimaryLink>}
+        actions={(
+          <>
+            <Link className="button" href="/opportunities/import"><ClipboardPaste size={16} aria-hidden="true" /> Pegar desde Workana</Link>
+            <PrimaryLink href="/opportunities/new">Nueva oportunidad</PrimaryLink>
+          </>
+        )}
       />
 
       {deleted && <div className="feedback-banner feedback-success" role="status">Oportunidad eliminada correctamente.</div>}
 
       <section className="panel">
         <form className="table-toolbar opportunity-toolbar" method="get">
+          <Link className="button mobile-import-link" href="/opportunities/import"><ClipboardPaste size={15} aria-hidden="true" /> Pegar desde Workana</Link>
           <label className="search-field">
             <span className="sr-only">Buscar oportunidades</span>
             <Search size={15} aria-hidden="true" />

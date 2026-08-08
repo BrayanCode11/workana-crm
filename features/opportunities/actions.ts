@@ -65,6 +65,31 @@ async function validateReferences(
   return null;
 }
 
+async function findDuplicateWorkanaOpportunity(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  workanaUrl: string | null | undefined,
+  excludeOpportunityId?: string,
+) {
+  if (!workanaUrl) return null;
+  let query = supabase
+    .from("opportunities")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("workana_url", workanaUrl);
+  if (excludeOpportunityId) query = query.neq("id", excludeOpportunityId);
+  const { data } = await query.maybeSingle();
+  return data?.id ?? null;
+}
+
+function duplicateState(opportunityId: string): OpportunityFormState {
+  return {
+    message: "Ya existe una oportunidad registrada con esta URL.",
+    duplicateOpportunityId: opportunityId,
+    errors: { workana_url: "Utiliza otra URL o abre la oportunidad existente." },
+  };
+}
+
 async function prepareOpportunity(formData: FormData): Promise<
   | { state: OpportunityFormState }
   | { values: OpportunityInsert; newClient: { name: string; company_name: string | null } | null }
@@ -97,6 +122,9 @@ export async function createOpportunityAction(
     return { message: "Revisa los campos indicados.", errors: { [referenceError.field]: referenceError.message } };
   }
 
+  const duplicateId = await findDuplicateWorkanaOpportunity(supabase, userId, prepared.values.workana_url);
+  if (duplicateId) return duplicateState(duplicateId);
+
   if (prepared.newClient) {
     const { data: client, error: clientError } = await supabase
       .from("clients")
@@ -117,6 +145,10 @@ export async function createOpportunityAction(
     .single();
 
   if (error) {
+    if (error.code === "23505" && prepared.values.workana_url) {
+      const raceDuplicateId = await findDuplicateWorkanaOpportunity(supabase, userId, prepared.values.workana_url);
+      if (raceDuplicateId) return duplicateState(raceDuplicateId);
+    }
     console.error("Unable to create opportunity", { code: error.code });
     return { message: "No pudimos guardar la oportunidad. Revisa los datos e intenta nuevamente." };
   }
@@ -149,6 +181,14 @@ export async function updateOpportunityAction(
   if (referenceError) {
     return { message: "Revisa los campos indicados.", errors: { [referenceError.field]: referenceError.message } };
   }
+
+  const duplicateId = await findDuplicateWorkanaOpportunity(
+    supabase,
+    userId,
+    prepared.values.workana_url,
+    opportunityId,
+  );
+  if (duplicateId) return duplicateState(duplicateId);
 
   // Los hitos de cierre son históricos: cambiar nuevamente la etapa no debe borrarlos.
   if (prepared.values.stage !== "won") {
@@ -184,6 +224,15 @@ export async function updateOpportunityAction(
     .maybeSingle();
 
   if (error || !data) {
+    if (error?.code === "23505" && prepared.values.workana_url) {
+      const raceDuplicateId = await findDuplicateWorkanaOpportunity(
+        supabase,
+        userId,
+        prepared.values.workana_url,
+        opportunityId,
+      );
+      if (raceDuplicateId) return duplicateState(raceDuplicateId);
+    }
     console.error("Unable to update opportunity", { code: error?.code });
     return { message: "No pudimos actualizar la oportunidad." };
   }

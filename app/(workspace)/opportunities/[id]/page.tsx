@@ -129,6 +129,8 @@ export default async function OpportunityDetailPage({
           <div className="section-heading"><h2>Atribución</h2></div>
           <dl className="detail-list">
             <div><dt>Cliente</dt><dd>{opportunity.clients ? <Link className="table-link" href={`/clients/${opportunity.clients.id}`}>{opportunity.clients.name}</Link> : "—"}</dd></div>
+            <div><dt>Contacto</dt><dd>{opportunity.contact_name ?? "—"}</dd></div>
+            <div><dt>País</dt><dd>{opportunity.contact_country ?? "—"}</dd></div>
             <div><dt>Experimento</dt><dd>{opportunity.experiments?.name ?? "—"}</dd></div>
             <div><dt>Variante</dt><dd>{opportunity.experiment_variants ? `${opportunity.experiment_variants.code} · ${opportunity.experiment_variants.name}` : "—"}</dd></div>
             <div><dt>Registrada</dt><dd>{formatDateTime(opportunity.created_at)}</dd></div>

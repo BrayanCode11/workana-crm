@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { logout } from "@/app/auth/actions";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { navigation } from "@/lib/navigation";
 
 function Brand() {
@@ -100,6 +101,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <Navigation />
         <div className="sidebar-footer">
+          <ThemeToggle />
           <form action={logout}>
             <button className="logout-button" type="submit">
               <LogOut size={15} strokeWidth={1.8} aria-hidden="true" />
@@ -148,12 +150,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </button>
             </div>
             <Navigation onNavigate={() => setMenuOpen(false)} />
-            <form action={logout} className="mobile-logout-form">
-              <button className="logout-button" type="submit">
-                <LogOut size={16} strokeWidth={1.8} aria-hidden="true" />
-                Cerrar sesión
-              </button>
-            </form>
+            <div className="mobile-account-actions">
+              <ThemeToggle />
+              <form action={logout} className="mobile-logout-form">
+                <button className="logout-button" type="submit">
+                  <LogOut size={16} strokeWidth={1.8} aria-hidden="true" />
+                  Cerrar sesión
+                </button>
+              </form>
+            </div>
           </aside>
         </div>
       )}
@@ -173,7 +178,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 function getMobileAction(pathname: string) {
-  if (pathname.endsWith("/new") || pathname.endsWith("/edit")) return null;
+  if (pathname.endsWith("/new") || pathname.endsWith("/edit") || pathname.endsWith("/import")) return null;
   if (pathname === "/clients") return { href: "/clients/new", label: "Nuevo cliente" };
   if (pathname === "/experiments") return { href: "/experiments/new", label: "Nuevo experimento" };
 

@@ -59,6 +59,8 @@ export type OpportunityFormField =
   | "title"
   | "workana_url"
   | "description"
+  | "contact_name"
+  | "contact_country"
   | "client_id"
   | "new_client_name"
   | "new_client_company"
@@ -83,6 +85,7 @@ export type OpportunityFormField =
 
 export type OpportunityFormState = {
   message?: string;
+  duplicateOpportunityId?: string;
   errors?: Partial<Record<OpportunityFormField, string>>;
 };
 
@@ -99,6 +102,6 @@ export type OpportunityFilters = {
   status?: string;
 };
 
-export type OpportunityFormValues = OpportunityRow & {
+export type OpportunityFormValues = Partial<OpportunityRow> & {
   stage: OpportunityStage | string;
 };

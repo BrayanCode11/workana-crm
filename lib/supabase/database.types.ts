@@ -179,6 +179,8 @@ export type Database = {
       opportunities: {
         Row: {
           client_id: string | null
+          contact_country: string | null
+          contact_name: string | null
           created_at: string
           description: string | null
           experiment_id: string | null
@@ -214,6 +216,8 @@ export type Database = {
         }
         Insert: {
           client_id?: string | null
+          contact_country?: string | null
+          contact_name?: string | null
           created_at?: string
           description?: string | null
           experiment_id?: string | null
@@ -249,6 +253,8 @@ export type Database = {
         }
         Update: {
           client_id?: string | null
+          contact_country?: string | null
+          contact_name?: string | null
           created_at?: string
           description?: string | null
           experiment_id?: string | null

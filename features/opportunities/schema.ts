@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { currencies, opportunityStages } from "./constants";
 import type { OpportunityFormField, OpportunityInsert } from "./types";
+import { normalizeWorkanaProjectUrl } from "./workana-parser";
 
 const optionalText = (maximum: number) => z.string().trim().max(maximum, `Utiliza como máximo ${maximum} caracteres.`);
 const optionalUuid = z.union([z.literal(""), z.string().uuid("Selecciona una opción válida.")]);
@@ -49,6 +50,8 @@ export const opportunityFormSchema = z.object({
     }
   }, "Escribe una URL completa que empiece por http:// o https://."),
   description: optionalText(10_000),
+  contact_name: optionalText(160),
+  contact_country: optionalText(100),
   client_id: optionalUuid,
   new_client_name: optionalText(160),
   new_client_company: optionalText(160),
@@ -139,6 +142,8 @@ const opportunityFormFields: OpportunityFormField[] = [
   "title",
   "workana_url",
   "description",
+  "contact_name",
+  "contact_country",
   "client_id",
   "new_client_name",
   "new_client_company",
@@ -174,8 +179,10 @@ export function toOpportunityInsert(values: z.infer<typeof opportunityFormSchema
 
   return {
     title: values.title,
-    workana_url: nullable(values.workana_url),
+    workana_url: values.workana_url ? normalizeWorkanaProjectUrl(values.workana_url) ?? values.workana_url : null,
     description: nullable(values.description),
+    contact_name: nullable(values.contact_name),
+    contact_country: nullable(values.contact_country),
     client_id: nullable(values.client_id),
     published_budget_min: parseMoney(values.published_budget_min),
     published_budget_max: parseMoney(values.published_budget_max),

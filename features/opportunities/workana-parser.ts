@@ -70,6 +70,8 @@ const explicitTechnologyPatterns: Array<[RegExp, string]> = [
   [/\brest\s+api\b/i, "REST API"],
 ];
 
+const plainTechnologySequence = /Responsive Web Design|REST API|WooCommerce|WordPress|JavaScript|TypeScript|Next(?:\.?js)|Node(?:\.?js)|React(?:\.?js)?|Vue(?:\.?js)?|PostgreSQL|Supabase|Firebase|Elementor|Shopify|Stripe|Figma|Python|Django|Laravel|Angular|Docker|MySQL|HTML|CSS|PHP|AWS|Git/gi;
+
 export function parseWorkanaProject(rawText: string): ParsedWorkanaProject {
   try {
     const text = String(rawText ?? "").replace(/\r\n?/g, "\n").trim();
@@ -122,7 +124,36 @@ function parseTitle(lines: string[]) {
     const match = line.trim().match(/^#\s+(.+?)\s*$/);
     if (match) return cleanInlineMarkdown(match[1]) || null;
   }
+
+  if (!hasWorkanaProjectStructure(lines)) return null;
+  const publishedIndex = lines.findIndex((line) => /publicado\s+el\b/i.test(cleanInlineMarkdown(line)));
+  const searchEnd = publishedIndex >= 0 ? publishedIndex : lines.length;
+  for (let index = searchEnd - 1; index >= 0; index -= 1) {
+    const candidate = cleanInlineMarkdown(lines[index]).replace(/^#{1,6}\s*/, "").replace(/^t[ií]tulo\s*:\s*/i, "").trim();
+    if (isPossiblePlainTitle(candidate)) return candidate;
+  }
+
+  for (const line of lines) {
+    const candidate = cleanInlineMarkdown(line).replace(/^#{1,6}\s*/, "").replace(/^t[ií]tulo\s*:\s*/i, "").trim();
+    if (isPossiblePlainTitle(candidate)) return candidate;
+  }
   return null;
+}
+
+function hasWorkanaProjectStructure(lines: string[]) {
+  return lines.some((line) => (
+    /publicado\s+el\b/i.test(cleanInlineMarkdown(line))
+    || normalizeHeading(line) === "sobre este proyecto"
+    || /^#{0,6}\s*[A-Z]{3}\s+[\d.,]+/i.test(cleanInlineMarkdown(line))
+    || normalizeHeading(line).startsWith("habilidades necesarias")
+    || Boolean(normalizeWorkanaProjectUrl(line))
+  ));
+}
+
+function isPossiblePlainTitle(candidate: string) {
+  if (!candidate || candidate.length > 240 || /^https?:\/\//i.test(candidate)) return false;
+  const normalized = stripDiacritics(candidate).toLowerCase();
+  return !/^(publicado el\b|proyecto$|data de competidores\b|sobre este proyecto$|categoria\b|subcategoria\b|plazo de entrega\b|habilidades necesarias\b|contacto\s*:|cliente\s*:|pais\s*:|[A-Z]{3}\s+[\d.,]+)/i.test(normalized);
 }
 
 function parsePublishedAt(text: string) {
@@ -206,10 +237,16 @@ function isDescriptionBoundary(line: string) {
 }
 
 function parseSkills(lines: string[]) {
-  const sectionIndex = lines.findIndex((line) => normalizeHeading(line) === "habilidades necesarias");
+  const sectionIndex = lines.findIndex((line) => normalizeHeading(line).startsWith("habilidades necesarias"));
   if (sectionIndex < 0) return { foundSection: false, technologies: [] as string[] };
 
   const technologies: string[] = [];
+  const headingContent = cleanInlineMarkdown(lines[sectionIndex])
+    .replace(/^#{1,6}\s*/, "")
+    .replace(/^habilidades necesarias\s*:?\s*/i, "")
+    .trim();
+  if (headingContent) addPlainTechnologies(technologies, headingContent);
+
   for (let index = sectionIndex + 1; index < lines.length; index += 1) {
     const line = lines[index].trim();
     if (!line) continue;
@@ -222,9 +259,26 @@ function parseSkills(lines: string[]) {
     }
 
     if (/^https?:\/\//i.test(line) || /^#{1,6}\s/.test(line)) continue;
-    addTechnology(technologies, cleanInlineMarkdown(line.replace(/^[-*+]\s+/, "")));
+    addPlainTechnologies(technologies, cleanInlineMarkdown(line.replace(/^[-*+]\s+/, "")));
   }
   return { foundSection: true, technologies };
+}
+
+function addPlainTechnologies(technologies: string[], value: string) {
+  const separated = value.split(/\s*(?:,|;|\||•|·|\t)\s*/).filter(Boolean);
+  if (separated.length > 1) {
+    separated.forEach((technology) => addTechnology(technologies, technology));
+    return;
+  }
+
+  const knownMatches = Array.from(value.matchAll(plainTechnologySequence), (match) => match[0]);
+  const remainder = value.replace(plainTechnologySequence, "").replace(/[\s,;|•·/+-]+/g, "");
+  if (knownMatches.length > 1 && !remainder) {
+    knownMatches.forEach((technology) => addTechnology(technologies, technology));
+    return;
+  }
+
+  addTechnology(technologies, value);
 }
 
 function isSkillsBoundary(line: string) {

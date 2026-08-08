@@ -151,3 +151,18 @@ test("detecta tecnologías explícitas en la descripción solo como fallback", (
   const result = parseWorkanaProject("# Proyecto\n##### Sobre este proyecto\nEl sitio utiliza WordPress y Elementor.");
   assert.deepEqual(result.technologies, ["WordPress", "Elementor"]);
 });
+
+test("detecta un título copiado como texto plano antes de la fecha", () => {
+  const text = "Desarrollo de tienda online para empresa industrial\nPublicado el 07 Agosto, 2026 en Programación y Tecnología\nSobre este proyecto\nUSD 250 - 500\nDescripción";
+  assert.equal(parseWorkanaProject(text).title, "Desarrollo de tienda online para empresa industrial");
+});
+
+test("separa habilidades planas para que el formulario pueda añadir comas", () => {
+  const text = "Proyecto con tecnologías\nPublicado el 07 Agosto, 2026\nSobre este proyecto\nUSD 250\nDescripción\nHabilidades necesarias\nPHP MySQL HTML CSS JavaScript Responsive Web Design";
+  assert.deepEqual(parseWorkanaProject(text).technologies, ["PHP", "MySQL", "HTML", "CSS", "JavaScript", "Responsive Web Design"]);
+});
+
+test("separa tecnologías desconocidas cuando el texto incluye delimitadores", () => {
+  const text = "Proyecto\nPublicado el 07 Agosto, 2026\nHabilidades necesarias: Astro | SvelteKit | Mercado Pago";
+  assert.deepEqual(parseWorkanaProject(text).technologies, ["Astro", "SvelteKit", "Mercado Pago"]);
+});

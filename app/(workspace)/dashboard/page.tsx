@@ -47,6 +47,17 @@ export default async function DashboardPage() {
         ))}
       </section>
 
+      <section className="panel attention-panel section" aria-labelledby="attention-title">
+        <div className="section-heading"><div><h2 id="attention-title">Requieren atención</h2><p className="section-description">Acciones comerciales pendientes calculadas con mensajes e hitos reales.</p></div></div>
+        <div className="attention-grid">
+          <Link href="/opportunities?stage=detected"><span>Consultas por enviar</span><strong>{data.attention.consultationPending}</strong></Link>
+          <Link href="/follow-ups?period=overdue"><span>F1 pendientes</span><strong>{data.attention.followUp1Pending}</strong></Link>
+          <Link href="/follow-ups?period=overdue"><span>F2 pendientes</span><strong>{data.attention.followUp2Pending}</strong></Link>
+          <Link href="/opportunities?stage=responded"><span>Respuestas sin contestar</span><strong>{data.attention.repliesPending}</strong></Link>
+          <Link href="/opportunities?stage=responded"><span>Posible propuesta</span><strong>{data.attention.proposalReady}</strong></Link>
+        </div>
+      </section>
+
       <div className="dashboard-grid section">
         <div>
           <div className="section-heading">

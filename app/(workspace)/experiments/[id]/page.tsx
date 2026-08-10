@@ -56,6 +56,7 @@ export default async function ExperimentDetailPage({
             <Badge tone={experimentStatusTone(experiment.status)}>
               {experimentStatusLabels[experiment.status as keyof typeof experimentStatusLabels] ?? experiment.status}
             </Badge>
+            {experiment.is_default_for_new_opportunities && <Badge tone="success">Asignación automática</Badge>}
           </div>
           <p>{formatExperimentPeriod(experiment.started_at, experiment.ended_at)}</p>
         </div>
@@ -134,7 +135,7 @@ export default async function ExperimentDetailPage({
                       <Link className="client-name-link" href={`/experiments/${experiment.id}/variants/${variant.id}/edit`}>
                         {variant.code} · {variant.name}
                       </Link>
-                      <span className="table-secondary">{variant.is_active ? "Activa" : "Inactiva"} · {variantMetrics.assigned} asignadas</span>
+                      <span className="table-secondary">{variant.is_active ? "Activa" : "Inactiva"} · {variantMetrics.assigned} asignadas · {variant.ai_instructions ? "IA configurada" : "Sin instrucciones IA"}</span>
                     </td>
                     <td className="numeric-cell"><strong>{variantMetrics.contacted}</strong></td>
                     <td className="numeric-cell">{variantMetrics.responded}</td>

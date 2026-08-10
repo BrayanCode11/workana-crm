@@ -22,6 +22,9 @@ export async function createExperimentAction(
 
   const { userId } = await requireUser();
   const supabase = await createClient();
+  if (parsed.values.is_default_for_new_opportunities) {
+    await supabase.from("experiments").update({ is_default_for_new_opportunities: false }).eq("user_id", userId);
+  }
   const { data, error } = await supabase
     .from("experiments")
     .insert({ ...parsed.values, user_id: userId })
@@ -47,6 +50,9 @@ export async function updateExperimentAction(
 
   const { userId } = await requireUser();
   const supabase = await createClient();
+  if (parsed.values.is_default_for_new_opportunities) {
+    await supabase.from("experiments").update({ is_default_for_new_opportunities: false }).eq("user_id", userId).neq("id", experimentId);
+  }
   const { data, error } = await supabase
     .from("experiments")
     .update(parsed.values)
@@ -109,6 +115,18 @@ export async function updateVariantAction(
 
   const { userId } = await requireUser();
   const supabase = await createClient();
+  const [{ data: current }, { count: contactedCount }] = await Promise.all([
+    supabase.from("experiment_variants").select("*").eq("id", variantId).eq("experiment_id", experimentId).eq("user_id", userId).maybeSingle(),
+    supabase.from("opportunities").select("id", { count: "exact", head: true }).eq("experiment_variant_id", variantId).eq("user_id", userId).not("first_contacted_at", "is", null),
+  ]);
+  if (!current) return { message: "La variante ya no está disponible." };
+  if ((contactedCount ?? 0) > 0) {
+    const semanticChanged = current.code !== parsed.values.code
+      || current.name !== parsed.values.name
+      || (current.description ?? null) !== parsed.values.description
+      || (current.ai_instructions ?? null) !== parsed.values.ai_instructions;
+    if (semanticChanged) return { message: "La estrategia de una variante contactada no puede modificarse. Solo puedes cambiar su estado activo." };
+  }
   const { data, error } = await supabase
     .from("experiment_variants")
     .update(parsed.values)

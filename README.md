@@ -79,9 +79,11 @@ El archivo `.env.example` documenta las variables sin incluir secretos:
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5.6-sol
 ```
 
-Usa `.env.local` para valores reales. Los archivos `.env*`, excepto `.env.example`, están ignorados por Git.
+Usa `.env.local` para valores reales. `OPENAI_API_KEY` es exclusivamente de servidor y nunca debe llevar el prefijo `NEXT_PUBLIC_`. Los archivos `.env*`, excepto `.env.example`, están ignorados por Git.
 
 ## Supabase
 
@@ -119,7 +121,7 @@ Se prefieren Server Components. Los Client Components se reservan para formulari
 
 ## Base de datos
 
-El modelo incluye perfiles, clientes, oportunidades, notas, experimentos, variantes y motivos de pérdida. `client_id` es opcional; las tecnologías son un arreglo simple de texto y las monedas nunca se agregan entre sí sin agruparlas.
+El modelo incluye perfiles, clientes, oportunidades, notas, mensajes comerciales, generaciones de IA, experimentos, variantes y motivos de pérdida. `client_id` es opcional; las tecnologías son un arreglo simple de texto y las monedas nunca se agregan entre sí sin agruparlas.
 
 Las relaciones compuestas garantizan que cliente, oportunidad, nota, experimento y variante pertenezcan al mismo usuario. Los clientes con oportunidades no pueden eliminarse accidentalmente. Los timestamps comerciales se registran la primera vez que se alcanza cada evento y se conservan aunque cambie la etapa actual.
 
@@ -132,6 +134,8 @@ La rama `main` está conectada a Vercel; cada publicación inicia un nuevo despl
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5.6-sol
 ```
 
 Después de cambiar una variable hay que volver a desplegar: las variables `NEXT_PUBLIC_*` quedan incorporadas durante el build. Los valores reales nunca se incluyen en el repositorio.

@@ -77,6 +77,7 @@ export type Database = {
       }
       experiment_variants: {
         Row: {
+          ai_instructions: string | null
           code: string
           created_at: string
           description: string | null
@@ -88,6 +89,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_instructions?: string | null
           code: string
           created_at?: string
           description?: string | null
@@ -99,6 +101,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          ai_instructions?: string | null
           code?: string
           created_at?: string
           description?: string | null
@@ -125,6 +128,7 @@ export type Database = {
           description: string | null
           ended_at: string | null
           id: string
+          is_default_for_new_opportunities: boolean
           name: string
           started_at: string | null
           status: string
@@ -136,6 +140,7 @@ export type Database = {
           description?: string | null
           ended_at?: string | null
           id?: string
+          is_default_for_new_opportunities?: boolean
           name: string
           started_at?: string | null
           status?: string
@@ -147,6 +152,7 @@ export type Database = {
           description?: string | null
           ended_at?: string | null
           id?: string
+          is_default_for_new_opportunities?: boolean
           name?: string
           started_at?: string | null
           status?: string
@@ -347,6 +353,88 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "opportunity_notes_opportunity_fk"
+            columns: ["opportunity_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
+      opportunity_messages: {
+        Row: {
+          content: string
+          created_at: string
+          direction: string
+          id: string
+          message_type: string
+          opportunity_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          direction: string
+          id?: string
+          message_type: string
+          opportunity_id: string
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          direction?: string
+          id?: string
+          message_type?: string
+          opportunity_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_messages_opportunity_fk"
+            columns: ["opportunity_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
+      ai_generations: {
+        Row: {
+          content: string | null
+          created_at: string
+          generation_type: string
+          id: string
+          model: string
+          opportunity_id: string
+          prompt_version: string
+          structured_data: Json
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          generation_type: string
+          id?: string
+          model: string
+          opportunity_id: string
+          prompt_version: string
+          structured_data: Json
+          user_id?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          generation_type?: string
+          id?: string
+          model?: string
+          opportunity_id?: string
+          prompt_version?: string
+          structured_data?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_generations_opportunity_fk"
             columns: ["opportunity_id", "user_id"]
             isOneToOne: false
             referencedRelation: "opportunities"

@@ -11,6 +11,8 @@ function opportunity(id: string, overrides: Partial<DashboardOpportunity> = {}):
     stage: "detected",
     first_contacted_at: "2026-08-01T12:00:00Z",
     first_response_at: null,
+    follow_up_1_at: null,
+    follow_up_2_at: null,
     proposal_at: null,
     negotiation_at: null,
     won_at: null,
@@ -26,6 +28,7 @@ function opportunity(id: string, overrides: Partial<DashboardOpportunity> = {}):
 test("resume pipeline, resultados, clientes y agenda sin mezclar monedas", () => {
   const metrics = getDashboardMetrics({
     clientIds: ["client-1", "client-2", "client-3"],
+    attention: { consultationPending: 0, followUp1Pending: 0, followUp2Pending: 0, repliesPending: 0, proposalReady: 0 },
     opportunities: [
       opportunity("1", { client_id: "client-1", stage: "contacted", next_follow_up_at: "2026-08-06T15:00:00Z" }),
       opportunity("2", { client_id: "client-1", stage: "won", first_response_at: "2026-08-02T12:00:00Z", proposal_at: "2026-08-03T12:00:00Z", negotiation_at: "2026-08-04T12:00:00Z", won_at: "2026-08-05T12:00:00Z", final_value: 100, final_value_currency: "USD" }),

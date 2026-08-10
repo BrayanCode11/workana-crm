@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { chooseLeastUsedVariant } from "@/features/experiments/assignment";
 import { activeOpportunityStages } from "./constants";
 import {
   formDataToObject,
@@ -90,6 +91,29 @@ function duplicateState(opportunityId: string): OpportunityFormState {
   };
 }
 
+async function assignDefaultExperiment(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  values: OpportunityInsert,
+) {
+  if (values.experiment_id || values.experiment_variant_id) return;
+  const { data: experiment } = await supabase.from("experiments")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .eq("is_default_for_new_opportunities", true)
+    .maybeSingle();
+  if (!experiment) return;
+  const [{ data: variants }, { data: assignments }] = await Promise.all([
+    supabase.from("experiment_variants").select("id, code, created_at").eq("user_id", userId).eq("experiment_id", experiment.id).eq("is_active", true),
+    supabase.from("opportunities").select("experiment_variant_id").eq("user_id", userId).eq("experiment_id", experiment.id),
+  ]);
+  const variant = chooseLeastUsedVariant(variants ?? [], assignments ?? []);
+  if (!variant) return;
+  values.experiment_id = experiment.id;
+  values.experiment_variant_id = variant.id;
+}
+
 async function prepareOpportunity(formData: FormData): Promise<
   | { state: OpportunityFormState }
   | { values: OpportunityInsert; newClient: { name: string; company_name: string | null } | null }
@@ -117,6 +141,7 @@ export async function createOpportunityAction(
 
   const { userId } = await requireUser();
   const supabase = await createClient();
+  await assignDefaultExperiment(supabase, userId, prepared.values);
   const referenceError = await validateReferences(supabase, userId, prepared.values);
   if (referenceError) {
     return { message: "Revisa los campos indicados.", errors: { [referenceError.field]: referenceError.message } };

@@ -11,6 +11,8 @@ export type DashboardOpportunity = Pick<
   | "stage"
   | "first_contacted_at"
   | "first_response_at"
+  | "follow_up_1_at"
+  | "follow_up_2_at"
   | "proposal_at"
   | "negotiation_at"
   | "won_at"
@@ -25,6 +27,13 @@ export type DashboardOpportunity = Pick<
 export type DashboardData = {
   opportunities: DashboardOpportunity[];
   clientIds: string[];
+  attention: {
+    consultationPending: number;
+    followUp1Pending: number;
+    followUp2Pending: number;
+    repliesPending: number;
+    proposalReady: number;
+  };
 };
 
 export type DashboardMetrics = {

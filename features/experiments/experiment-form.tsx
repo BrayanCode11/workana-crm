@@ -71,6 +71,11 @@ export function ExperimentForm({
           <FieldError field="ended_at" state={state} />
           <span className="field-help" id="ended-at-help">Es obligatoria cuando el estado es Finalizado.</span>
         </div>
+
+        <label className="checkbox-field form-field-wide">
+          <input name="is_default_for_new_opportunities" type="checkbox" defaultChecked={values?.is_default_for_new_opportunities ?? false} disabled={pending} />
+          <span><strong>Asignar nuevas oportunidades automáticamente</strong><small>Será el experimento predeterminado. Solo puede haber uno y debe estar activo.</small></span>
+        </label>
       </div>
 
       <div className="form-actions">

@@ -2,6 +2,7 @@ import { ArrowLeft, ExternalLink, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui";
+import { OpportunityAssistant } from "@/features/ai/opportunity-assistant";
 import { DeleteOpportunityButton } from "@/features/opportunities/delete-opportunity-button";
 import { OpportunityNotes } from "@/features/opportunities/opportunity-notes";
 import { getOpportunity } from "@/features/opportunities/queries";
@@ -150,6 +151,8 @@ export default async function OpportunityDetailPage({
           )}
         </section>
       </div>
+
+      <OpportunityAssistant opportunity={opportunity} />
 
       <OpportunityNotes opportunityId={opportunity.id} notes={notes} feedback={noteFeedback} />
 

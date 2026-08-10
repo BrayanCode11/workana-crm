@@ -27,14 +27,14 @@ export type ExperimentWithRelations = ExperimentRow & {
   opportunities: ExperimentOpportunity[];
 };
 
-export type ExperimentFormField = "name" | "description" | "status" | "started_at" | "ended_at";
+export type ExperimentFormField = "name" | "description" | "status" | "started_at" | "ended_at" | "is_default_for_new_opportunities";
 
 export type ExperimentFormState = {
   message?: string;
   errors?: Partial<Record<ExperimentFormField, string>>;
 };
 
-export type VariantFormField = "code" | "name" | "description" | "is_active";
+export type VariantFormField = "code" | "name" | "description" | "ai_instructions" | "is_active";
 
 export type VariantFormState = {
   message?: string;

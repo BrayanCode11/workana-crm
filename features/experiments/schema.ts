@@ -22,6 +22,7 @@ const experimentSchema = z.object({
   status: z.enum(experimentStatuses, { message: "Selecciona un estado válido." }),
   started_at: optionalDate,
   ended_at: optionalDate,
+  is_default_for_new_opportunities: z.boolean(),
 }).superRefine((values, context) => {
   if (values.ended_at && !values.started_at) {
     context.addIssue({ code: "custom", path: ["started_at"], message: "Añade la fecha de inicio antes de finalizar el experimento." });
@@ -32,12 +33,16 @@ const experimentSchema = z.object({
   if (values.status === "completed" && !values.ended_at) {
     context.addIssue({ code: "custom", path: ["ended_at"], message: "Indica cuándo finalizó el experimento." });
   }
+  if (values.is_default_for_new_opportunities && values.status !== "active") {
+    context.addIssue({ code: "custom", path: ["is_default_for_new_opportunities"], message: "Solo un experimento activo puede ser el predeterminado." });
+  }
 });
 
 const variantSchema = z.object({
   code: z.string().trim().min(1, "El código es obligatorio.").max(20, "Utiliza como máximo 20 caracteres."),
   name: z.string().trim().min(1, "El nombre es obligatorio.").max(160, "Utiliza como máximo 160 caracteres."),
   description: z.string().trim().max(5000, "Utiliza como máximo 5.000 caracteres."),
+  ai_instructions: z.string().trim().max(10000, "Utiliza como máximo 10.000 caracteres."),
   is_active: z.boolean(),
 });
 
@@ -67,10 +72,11 @@ export function parseExperimentForm(formData: FormData):
     status: String(formData.get("status") ?? ""),
     started_at: String(formData.get("started_at") ?? ""),
     ended_at: String(formData.get("ended_at") ?? ""),
+    is_default_for_new_opportunities: formData.get("is_default_for_new_opportunities") === "on",
   });
 
   if (!parsed.success) {
-    const fields: ExperimentFormField[] = ["name", "description", "status", "started_at", "ended_at"];
+    const fields: ExperimentFormField[] = ["name", "description", "status", "started_at", "ended_at", "is_default_for_new_opportunities"];
     return { state: { message: "Revisa los campos indicados.", errors: errorsFor(parsed.error, fields) } };
   }
 
@@ -81,6 +87,7 @@ export function parseExperimentForm(formData: FormData):
       status: parsed.data.status,
       started_at: parsed.data.started_at || null,
       ended_at: parsed.data.ended_at || null,
+      is_default_for_new_opportunities: parsed.data.is_default_for_new_opportunities,
     },
   };
 }
@@ -92,11 +99,12 @@ export function parseVariantForm(formData: FormData):
     code: String(formData.get("code") ?? ""),
     name: String(formData.get("name") ?? ""),
     description: String(formData.get("description") ?? ""),
+    ai_instructions: String(formData.get("ai_instructions") ?? ""),
     is_active: formData.get("is_active") === "on",
   });
 
   if (!parsed.success) {
-    const fields: VariantFormField[] = ["code", "name", "description", "is_active"];
+    const fields: VariantFormField[] = ["code", "name", "description", "ai_instructions", "is_active"];
     return { state: { message: "Revisa los campos indicados.", errors: errorsFor(parsed.error, fields) } };
   }
 
@@ -105,6 +113,7 @@ export function parseVariantForm(formData: FormData):
       code: parsed.data.code.toLocaleUpperCase("es"),
       name: parsed.data.name,
       description: parsed.data.description || null,
+      ai_instructions: parsed.data.ai_instructions || null,
       is_active: parsed.data.is_active,
     },
   };

@@ -36,6 +36,7 @@ export default async function EditVariantPage({
           values={variant}
           cancelHref={`/experiments/${experiment.id}`}
           submitLabel="Guardar variante"
+          locked={experiment.opportunities.some((opportunity) => opportunity.experiment_variant_id === variant.id && Boolean(opportunity.first_contacted_at))}
         />
       </section>
     </>

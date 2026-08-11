@@ -18,6 +18,10 @@ async function validateReferences(
   userId: string,
   values: OpportunityInsert,
 ) {
+  if (!values.stage) {
+    return { field: "stage" as const, message: "Selecciona una etapa válida." };
+  }
+
   const { data: stage } = await supabase
     .from("pipeline_stages")
     .select("slug")

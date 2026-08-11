@@ -209,8 +209,13 @@ function PipelineColumn({
   onStageChange: (id: string, stage: string) => void;
 }) {
   const { isOver, setNodeRef } = useDroppable({ id: stage.slug, data: { stage: stage.slug } });
+  const terminalClass = stage.slug === "won"
+    ? "kanban-column-won"
+    : stage.slug === "lost"
+      ? "kanban-column-lost"
+      : "";
   return (
-    <article className={`kanban-column ${isOver ? "kanban-column-over" : ""}`} ref={setNodeRef}>
+    <article className={`kanban-column ${terminalClass} ${isOver ? "kanban-column-over" : ""}`.trim()} ref={setNodeRef}>
       <header className="kanban-heading">
         <h2>{stage.name}</h2>
         <span className="kanban-count">{opportunities.length}</span>

@@ -1,9 +1,9 @@
 "use client";
 
-import { LogOut, Menu, Plus, X } from "lucide-react";
+import { LogOut, Menu, PanelLeftClose, PanelLeftOpen, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
 import { logout } from "@/app/auth/actions";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { navigation } from "@/lib/navigation";
@@ -22,7 +22,22 @@ function Brand() {
   );
 }
 
-function Navigation({ onNavigate }: { onNavigate?: () => void }) {
+const sidebarStorageKey = "prospecta-sidebar";
+
+function subscribeSidebarPreference(onStoreChange: () => void) {
+  window.addEventListener("prospecta-sidebar-change", onStoreChange);
+  window.addEventListener("storage", onStoreChange);
+  return () => {
+    window.removeEventListener("prospecta-sidebar-change", onStoreChange);
+    window.removeEventListener("storage", onStoreChange);
+  };
+}
+
+function getSidebarSnapshot() {
+  return localStorage.getItem(sidebarStorageKey) === "collapsed";
+}
+
+function Navigation({ onNavigate, collapsed = false }: { onNavigate?: () => void; collapsed?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -38,6 +53,8 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
             href={item.href}
             key={item.href}
             onClick={onNavigate}
+            aria-label={collapsed ? item.name : undefined}
+            title={collapsed ? item.name : undefined}
           >
             <Icon aria-hidden="true" size={18} strokeWidth={1.8} />
             <span>{item.name}</span>
@@ -50,11 +67,18 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const sidebarCollapsed = useSyncExternalStore(subscribeSidebarPreference, getSidebarSnapshot, () => false);
   const pathname = usePathname();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLElement>(null);
   const mobileAction = getMobileAction(pathname);
+
+  function toggleSidebar() {
+    const nextValue = sidebarCollapsed ? "expanded" : "collapsed";
+    localStorage.setItem(sidebarStorageKey, nextValue);
+    window.dispatchEvent(new Event("prospecta-sidebar-change"));
+  }
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -93,19 +117,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${sidebarCollapsed ? "app-shell-sidebar-collapsed" : ""}`}>
       <a className="skip-link" href="#main-content">Saltar al contenido principal</a>
-      <aside className="sidebar">
+      <aside className="sidebar" id="desktop-sidebar">
         <div className="sidebar-brand">
           <Brand />
+          <button
+            aria-controls="desktop-sidebar"
+            aria-expanded={!sidebarCollapsed}
+            aria-label={sidebarCollapsed ? "Expandir menú lateral" : "Contraer menú lateral"}
+            className="sidebar-toggle"
+            onClick={toggleSidebar}
+            title={sidebarCollapsed ? "Expandir menú" : "Contraer menú"}
+            type="button"
+          >
+            {sidebarCollapsed
+              ? <PanelLeftOpen size={16} aria-hidden="true" />
+              : <PanelLeftClose size={16} aria-hidden="true" />}
+          </button>
         </div>
-        <Navigation />
+        <Navigation collapsed={sidebarCollapsed} />
         <div className="sidebar-footer">
-          <ThemeToggle />
+          <ThemeToggle compact={sidebarCollapsed} />
           <form action={logout}>
-            <button className="logout-button" type="submit">
+            <button className="logout-button" type="submit" aria-label="Cerrar sesión" title={sidebarCollapsed ? "Cerrar sesión" : undefined}>
               <LogOut size={15} strokeWidth={1.8} aria-hidden="true" />
-              Cerrar sesión
+              <span>Cerrar sesión</span>
             </button>
           </form>
         </div>

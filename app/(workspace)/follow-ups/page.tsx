@@ -39,9 +39,11 @@ export default async function FollowUpsPage({ searchParams }: PageProps<"/follow
         ? "Seguimiento reprogramado correctamente."
         : params.responded === "1"
           ? "Respuesta registrada. La oportunidad salió de los seguimientos pendientes."
+          : params.no_response === "1"
+            ? "Oportunidad marcada como No responde. La cadencia quedó cerrada."
           : params.lost === "1"
-            ? "Oportunidad marcada como perdida."
-            : null;
+              ? "Oportunidad marcada como perdida."
+              : null;
   const actionError = params.action_error === "1";
   const total = periods.reduce((sum, period) => sum + data.groups[period].length, 0);
 

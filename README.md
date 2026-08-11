@@ -24,6 +24,7 @@ La aplicación funcional incluye:
 - Notas de oportunidad en texto simple con creación, edición, eliminación y orden cronológico inverso.
 - Seguimientos agrupados en vencidos, hoy y próximos, con registro, reprogramación y cierre rápido.
 - Pipeline Kanban con arrastre por puntero/teclado, actualización optimista, rollback y selector accesible.
+- Etapas del pipeline configurables por usuario, con “No responde” incluida y creación/eliminación segura de columnas personalizadas.
 - Cierres ganados y perdidos con valor final, moneda, fecha, motivo y observaciones validadas.
 - Hitos comerciales históricos inmutables aunque una oportunidad vuelva a una etapa anterior.
 - Experimentos con estados, variantes activables y analítica comparativa basada en hitos reales.

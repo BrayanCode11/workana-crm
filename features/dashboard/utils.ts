@@ -1,11 +1,10 @@
 import { bogotaDateKey } from "@/features/follow-ups/utils";
-import { opportunityStages, type OpportunityStage } from "@/features/opportunities/constants";
 import type { DashboardData, DashboardMetrics, DashboardOpportunity } from "./types";
 
-const waitingStages = new Set<OpportunityStage>(["contacted", "follow_up_1", "follow_up_2"]);
+const waitingStages = new Set(["contacted", "follow_up_1", "follow_up_2"]);
 
 export function getDashboardMetrics(data: DashboardData, now = new Date()): DashboardMetrics {
-  const stageCounts = Object.fromEntries(opportunityStages.map((stage) => [stage, 0])) as Record<OpportunityStage, number>;
+  const stageCounts = Object.fromEntries(data.pipelineStages.map((stage) => [stage.slug, 0])) as Record<string, number>;
   const wonByCurrency: Record<string, number> = {};
   const opportunitiesByClient = new Map<string, number>();
   const clientsWithActiveOpportunities = new Set<string>();
@@ -21,13 +20,13 @@ export function getDashboardMetrics(data: DashboardData, now = new Date()): Dash
   let lost = 0;
 
   data.opportunities.forEach((opportunity) => {
-    if (opportunityStages.includes(opportunity.stage as OpportunityStage)) {
-      stageCounts[opportunity.stage as OpportunityStage] += 1;
+    if (opportunity.stage in stageCounts) {
+      stageCounts[opportunity.stage] += 1;
     }
 
-    const isActive = opportunity.stage !== "won" && opportunity.stage !== "lost";
+    const isActive = !["no_response", "won", "lost"].includes(opportunity.stage);
     if (isActive) active += 1;
-    if (waitingStages.has(opportunity.stage as OpportunityStage)) waiting += 1;
+    if (waitingStages.has(opportunity.stage)) waiting += 1;
     if (opportunity.first_contacted_at) contacted += 1;
     if (opportunity.first_response_at) responded += 1;
     if (opportunity.proposal_at) proposals += 1;

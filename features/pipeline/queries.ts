@@ -26,7 +26,7 @@ const pipelineSelect = `
 export async function getPipelineData(): Promise<PipelineData> {
   const { userId } = await requireUser();
   const supabase = await createClient();
-  const [opportunitiesResult, lostReasonsResult] = await Promise.all([
+  const [opportunitiesResult, lostReasonsResult, stagesResult] = await Promise.all([
     supabase
       .from("opportunities")
       .select(pipelineSelect)
@@ -37,9 +37,15 @@ export async function getPipelineData(): Promise<PipelineData> {
       .select("id, name, slug")
       .eq("is_active", true)
       .order("id"),
+    supabase
+      .from("pipeline_stages")
+      .select("id, user_id, slug, name, position, is_protected, created_at, updated_at")
+      .eq("user_id", userId)
+      .order("position")
+      .order("created_at"),
   ]);
 
-  const error = opportunitiesResult.error ?? lostReasonsResult.error;
+  const error = opportunitiesResult.error ?? lostReasonsResult.error ?? stagesResult.error;
   if (error) {
     console.error("Unable to load pipeline", { code: error.code });
     throw new Error("No pudimos cargar el pipeline.");
@@ -48,6 +54,6 @@ export async function getPipelineData(): Promise<PipelineData> {
   return {
     opportunities: (opportunitiesResult.data ?? []) as unknown as PipelineOpportunity[],
     lostReasons: lostReasonsResult.data ?? [],
+    stages: stagesResult.data ?? [],
   };
 }
-

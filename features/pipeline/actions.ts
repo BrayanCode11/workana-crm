@@ -3,15 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
-import { currencies, opportunityStages } from "@/features/opportunities/constants";
+import { currencies } from "@/features/opportunities/constants";
 import { createClient } from "@/lib/supabase/server";
-import type { PipelineActionResult, PipelineCloseInput } from "./types";
+import { pipelineStageSlug } from "./stages";
+import type { PipelineActionResult, PipelineCloseInput, PipelineStageActionState } from "./types";
 
-const activeStageSchema = z.enum(opportunityStages).refine(
-  (stage) => stage !== "won" && stage !== "lost",
-  "Completa los datos de cierre para esta etapa.",
-);
-const expectedStageSchema = z.enum(opportunityStages);
+const stageSlugSchema = z.string().trim().regex(/^[a-z0-9]+(?:_[a-z0-9]+)*$/).max(60);
+const stageNameSchema = z.string().trim().min(1, "Escribe el nombre de la etapa.").max(80, "Utiliza como máximo 80 caracteres.");
 const optionalDateSchema = z.union([
   z.literal(""),
   z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Selecciona una fecha válida.").refine(isCalendarDate, "Selecciona una fecha válida."),
@@ -61,14 +59,22 @@ export async function movePipelineOpportunityAction(
   targetStage: string,
   expectedStage: string,
 ): Promise<PipelineActionResult> {
-  const target = activeStageSchema.safeParse(targetStage);
-  const expected = expectedStageSchema.safeParse(expectedStage);
+  const target = stageSlugSchema.safeParse(targetStage);
+  const expected = stageSlugSchema.safeParse(expectedStage);
   if (!target.success || !expected.success) {
     return { ok: false, message: "La etapa seleccionada no es válida." };
   }
 
   const { userId } = await requireUser();
   const supabase = await createClient();
+  const { data: stage } = await supabase.from("pipeline_stages")
+    .select("slug")
+    .eq("user_id", userId)
+    .eq("slug", target.data)
+    .maybeSingle();
+  if (!stage || ["won", "lost"].includes(stage.slug)) {
+    return { ok: false, message: "La etapa seleccionada no está disponible." };
+  }
   const { data, error } = await supabase
     .from("opportunities")
     .update({ stage: target.data })
@@ -92,7 +98,7 @@ export async function closePipelineOpportunityAction(
   expectedStage: string,
   input: PipelineCloseInput,
 ): Promise<PipelineActionResult> {
-  const expected = expectedStageSchema.safeParse(expectedStage);
+  const expected = stageSlugSchema.safeParse(expectedStage);
   if (!expected.success) return { ok: false, message: "La etapa anterior no es válida." };
 
   const schema = input.stage === "won" ? wonSchema : lostSchema;
@@ -163,4 +169,63 @@ export async function closePipelineOpportunityAction(
 
   refreshPipelinePaths(opportunityId, data.client_id);
   return { ok: true, opportunity: data };
+}
+
+export async function createPipelineStageAction(
+  _previousState: PipelineStageActionState,
+  formData: FormData,
+): Promise<PipelineStageActionState> {
+  const parsed = stageNameSchema.safeParse(String(formData.get("name") ?? ""));
+  if (!parsed.success) return { message: "Revisa el nombre.", errors: { name: parsed.error.issues[0]?.message } };
+  const slug = pipelineStageSlug(parsed.data);
+  if (!slug) return { message: "Revisa el nombre.", errors: { name: "Utiliza letras o números." } };
+  const { userId } = await requireUser();
+  const supabase = await createClient();
+  const { data: lastStage } = await supabase.from("pipeline_stages")
+    .select("position")
+    .eq("user_id", userId)
+    .lt("position", 9000)
+    .order("position", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const { error } = await supabase.from("pipeline_stages").insert({
+    user_id: userId,
+    slug,
+    name: parsed.data,
+    position: (lastStage?.position ?? 80) + 10,
+    is_protected: false,
+  });
+  if (error?.code === "23505") return { message: "Ya existe una etapa con ese nombre.", errors: { name: "Utiliza otro nombre." } };
+  if (error) return { message: "No pudimos crear la etapa. Intenta nuevamente." };
+  revalidatePath("/pipeline");
+  revalidatePath("/opportunities");
+  revalidatePath("/dashboard");
+  return { ok: true, message: "Etapa agregada." };
+}
+
+export async function deletePipelineStageAction(stageId: string): Promise<PipelineStageActionState> {
+  const { userId } = await requireUser();
+  const supabase = await createClient();
+  const { data: stage } = await supabase.from("pipeline_stages")
+    .select("id, slug, name, is_protected")
+    .eq("id", stageId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (!stage) return { message: "La etapa ya no está disponible." };
+  if (stage.is_protected) return { message: "Esta etapa sostiene el flujo y las métricas del CRM, por eso no puede eliminarse." };
+  const { count } = await supabase.from("opportunities")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("stage", stage.slug);
+  if ((count ?? 0) > 0) return { message: `Mueve primero las oportunidades de “${stage.name}” a otra etapa.` };
+  const { error } = await supabase.from("pipeline_stages")
+    .delete()
+    .eq("id", stage.id)
+    .eq("user_id", userId)
+    .eq("is_protected", false);
+  if (error) return { message: "No pudimos eliminar la etapa." };
+  revalidatePath("/pipeline");
+  revalidatePath("/opportunities");
+  revalidatePath("/dashboard");
+  return { ok: true, message: "Etapa eliminada." };
 }

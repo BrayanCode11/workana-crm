@@ -326,6 +326,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "opportunities_pipeline_stage_fk"
+            columns: ["user_id", "stage"]
+            isOneToOne: false
+            referencedRelation: "pipeline_stages"
+            referencedColumns: ["user_id", "slug"]
+          },
+          {
             foreignKeyName: "opportunities_variant_fk"
             columns: ["experiment_variant_id", "experiment_id", "user_id"]
             isOneToOne: false
@@ -406,6 +413,39 @@ export type Database = {
             referencedColumns: ["id", "user_id"]
           },
         ]
+      }
+      pipeline_stages: {
+        Row: {
+          created_at: string
+          id: string
+          is_protected: boolean
+          name: string
+          position: number
+          slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_protected?: boolean
+          name: string
+          position?: number
+          slug: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_protected?: boolean
+          name?: string
+          position?: number
+          slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

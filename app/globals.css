@@ -85,7 +85,7 @@ body {
   background: var(--canvas);
   color: var(--ink);
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
 }
@@ -120,7 +120,7 @@ a {
   border-radius: 6px;
   background: var(--ink);
   color: var(--on-ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 680;
   transform: translateY(-150%);
   transition: transform 120ms ease;
@@ -167,7 +167,7 @@ a {
   border-radius: 7px;
   background: var(--ink);
   color: var(--on-ink);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 750;
   letter-spacing: -0.02em;
 }
@@ -178,14 +178,14 @@ a {
 }
 
 .brand strong {
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: -0.02em;
 }
 
 .brand small {
   margin-top: 1px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .sidebar-nav {
@@ -197,7 +197,7 @@ a {
 .eyebrow {
   margin: 0;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -217,7 +217,7 @@ a {
   border: 1px solid transparent;
   border-radius: 6px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 540;
   transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
 }
@@ -250,7 +250,7 @@ a {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -277,7 +277,7 @@ a {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -324,7 +324,7 @@ a {
   max-width: 650px;
   margin: 0;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .page-actions {
@@ -345,7 +345,7 @@ a {
   border-radius: 6px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
   cursor: pointer;
   transition: background-color 140ms ease, border-color 140ms ease;
@@ -394,7 +394,7 @@ a {
 
 .section-heading h2 {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 680;
   letter-spacing: -0.01em;
 }
@@ -404,7 +404,7 @@ a {
   align-items: center;
   gap: 5px;
   color: var(--accent);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
 }
 
@@ -440,7 +440,7 @@ a {
   justify-content: space-between;
   gap: 8px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -455,7 +455,7 @@ a {
 .metric-note {
   margin-top: 2px;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .dashboard-grid {
@@ -488,7 +488,7 @@ a {
 
 .metric-value-money {
   margin-top: 15px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.45;
   letter-spacing: -0.015em;
 }
@@ -586,7 +586,7 @@ a {
 .dashboard-follow-up-item strong {
   overflow: hidden;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -596,7 +596,7 @@ a {
   margin-top: 3px;
   overflow: hidden;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -618,13 +618,13 @@ a {
 
 .dashboard-follow-up-empty strong {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .dashboard-follow-up-empty span {
   margin-top: 2px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .pipeline-summary-item {
@@ -651,7 +651,7 @@ a {
   justify-content: space-between;
   gap: 12px;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -680,7 +680,7 @@ a {
 
 .dashboard-mini-metrics dt {
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .dashboard-mini-metrics dd {
@@ -692,12 +692,12 @@ a {
 }
 
 .dashboard-mini-metric-wide dd {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .dashboard-panel-link {
   margin-top: 15px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .dashboard-method-note {
@@ -708,13 +708,13 @@ a {
 
 .dashboard-method-note strong {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .dashboard-method-note p {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
@@ -740,7 +740,7 @@ a {
 
 .follow-up-label {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .pipeline-summary {
@@ -766,7 +766,7 @@ a {
 .pipeline-summary-item span {
   display: block;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .pipeline-summary-item strong {
@@ -792,7 +792,7 @@ a {
 .setup-panel p {
   margin: 0;
   color: #b8c3bd;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .setup-steps {
@@ -808,7 +808,7 @@ a {
   align-items: center;
   gap: 10px;
   color: #d6ddd9;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .step-number {
@@ -820,7 +820,7 @@ a {
   border: 1px solid #53625a;
   border-radius: 50%;
   color: #dbe4df;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .table-toolbar {
@@ -875,7 +875,7 @@ a {
   border-radius: 5px;
   background: var(--surface);
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .filter-select {
@@ -886,7 +886,7 @@ a {
   border-radius: 5px;
   background: var(--surface);
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .opportunity-toolbar {
@@ -915,7 +915,7 @@ a {
   border-bottom: 1px solid var(--line);
   background: var(--sidebar);
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -926,7 +926,7 @@ a {
   padding: 13px 16px;
   border-bottom: 1px solid var(--line);
   color: var(--body-text);
-  font-size: 12px;
+  font-size: 13px;
   vertical-align: middle;
 }
 
@@ -972,7 +972,7 @@ a {
 .table-secondary {
   margin-top: 2px;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .opportunities-table {
@@ -985,7 +985,7 @@ a {
   gap: 5px;
   margin-right: 8px;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
 }
 
@@ -1027,7 +1027,7 @@ a {
 
 .empty-state h2 {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 680;
 }
 
@@ -1035,7 +1035,7 @@ a {
   max-width: 400px;
   margin: 5px 0 19px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .badge {
@@ -1047,7 +1047,7 @@ a {
   border-radius: 4px;
   background: var(--surface-subtle);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
 }
 
@@ -1073,7 +1073,7 @@ a {
   padding: 11px 13px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -1098,12 +1098,12 @@ a {
 .button-small {
   min-height: 30px;
   padding: 5px 9px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .inline-success {
   color: var(--success);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
 }
 
@@ -1140,7 +1140,7 @@ a {
 
 .prepared-message-block:last-child { border-right: 0; }
 .prepared-message-heading { display: flex; min-height: 31px; align-items: center; justify-content: space-between; gap: 10px; }
-.prepared-message-heading label { color: var(--ink); font-size: 13px; font-weight: 680; }
+.prepared-message-heading label { color: var(--ink); font-size: 14px; font-weight: 680; }
 .prepared-message-block textarea,
 .conversation-composer textarea {
   width: 100%;
@@ -1158,7 +1158,7 @@ a {
 .conversation-composer textarea:focus { border-color: var(--focus); outline: 3px solid color-mix(in srgb, var(--focus) 20%, transparent); }
 .prepared-sent-button { width: 100%; margin-top: 10px; }
 .prepared-messages-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; }
-.prepared-messages-footer > span { color: var(--muted); font-size: 12px; }
+.prepared-messages-footer > span { color: var(--muted); font-size: 13px; }
 .prepared-messages .feedback-banner { margin-top: 14px; }
 
 .conversation-empty { margin: 0 0 18px; padding: 17px; border: 1px dashed var(--line-strong); color: var(--muted); }
@@ -1181,7 +1181,7 @@ a {
 }
 
 .message-outbound { margin-left: auto; border-color: var(--success-border); background: var(--accent-soft); }
-.message-item > div { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; }
+.message-item > div { display: flex; justify-content: space-between; gap: 16px; font-size: 13px; }
 .message-item span { color: var(--muted); }
 .message-item p { margin: 6px 0 0; white-space: pre-wrap; }
 
@@ -1192,7 +1192,7 @@ a {
 .attention-grid a:hover { background: var(--surface-hover); color: var(--ink); }
 .attention-grid strong { color: var(--ink); font-size: 18px; }
 .attention-grid span, .attention-grid small { display: block; }
-.attention-grid small { margin-top: 2px; color: var(--faint); font-size: 10px; }
+.attention-grid small { margin-top: 2px; color: var(--faint); font-size: 11px; }
 
 @media (max-width: 900px) {
   .attention-grid { grid-template-columns: 1fr 1fr; }
@@ -1221,7 +1221,7 @@ a {
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 650;
 }
 
@@ -1275,13 +1275,13 @@ a {
   border-radius: 5px;
   background: var(--accent-soft);
   color: var(--accent);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 750;
 }
 
 .import-step-heading h2 {
   margin: 1px 0 3px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -1289,7 +1289,7 @@ a {
 .workana-paste-footer p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .workana-paste-panel textarea {
@@ -1302,7 +1302,7 @@ a {
   background: var(--surface-subtle);
   color: var(--ink);
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
   outline: none;
 }
@@ -1375,14 +1375,14 @@ a {
   margin-bottom: 17px;
   padding: 0;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
 }
 
 .form-section-description {
   margin: -11px 0 18px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .form-grid {
@@ -1445,12 +1445,12 @@ a {
 
 .field-error {
   color: var(--danger);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .field-help {
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .quick-create {
@@ -1465,7 +1465,7 @@ a {
   align-items: center;
   gap: 7px;
   color: var(--accent);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 680;
   cursor: pointer;
 }
@@ -1473,7 +1473,7 @@ a {
 .quick-create > p {
   margin: 8px 0 14px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .quick-create:not([open]) > p,
@@ -1552,7 +1552,7 @@ a {
 .detail-header p {
   margin: 7px 0 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .detail-title-row {
@@ -1593,7 +1593,7 @@ a {
 .detail-copy-block > span {
   display: block;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -1601,7 +1601,7 @@ a {
   display: block;
   margin-top: 8px;
   color: var(--ink);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 680;
   line-height: 1.45;
 }
@@ -1619,7 +1619,7 @@ a {
 .client-metrics span {
   display: block;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -1633,7 +1633,7 @@ a {
 }
 
 .client-value-metric strong {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.45;
 }
 
@@ -1671,14 +1671,14 @@ a {
 
 .detail-list dt {
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
 }
 
 .detail-list dd {
   margin: 0;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .external-link {
@@ -1692,7 +1692,7 @@ a {
 .client-notes {
   margin: 0;
   color: var(--body-text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.7;
   white-space: pre-wrap;
 }
@@ -1710,7 +1710,7 @@ a {
 .detail-copy-block p {
   margin: 7px 0 0;
   color: var(--body-text);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   white-space: pre-wrap;
 }
@@ -1725,7 +1725,7 @@ a {
   display: block;
   margin-bottom: 7px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
 }
 
@@ -1743,13 +1743,13 @@ a {
   border-radius: 6px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .stage-form p {
   margin: 8px 0 0;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .note-composer {
@@ -1764,7 +1764,7 @@ a {
   display: block;
   margin-bottom: 8px;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 680;
 }
 
@@ -1778,7 +1778,7 @@ a {
   background: var(--surface);
   color: var(--ink);
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   outline: none;
 }
@@ -1821,7 +1821,7 @@ a {
 .notes-empty p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .note-card {
@@ -1839,7 +1839,7 @@ a {
 .note-card-header span {
   display: block;
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .note-card-header span {
@@ -1862,7 +1862,7 @@ a {
   border-radius: 4px;
   background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 620;
   cursor: pointer;
 }
@@ -1885,7 +1885,7 @@ a {
 .note-content {
   margin: 13px 0 0;
   color: var(--body-text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.75;
   white-space: pre-wrap;
 }
@@ -1914,7 +1914,7 @@ a {
   border: 1px solid var(--line);
   border-radius: 4px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .client-opportunities-table {
@@ -1933,7 +1933,7 @@ a {
 .inline-empty-state p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .danger-zone {
@@ -1949,14 +1949,14 @@ a {
 
 .danger-zone h2 {
   margin: 0 0 3px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 680;
 }
 
 .danger-zone p {
   margin: 0;
   color: var(--danger);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .danger-button {
@@ -1969,7 +1969,7 @@ a {
   border-radius: 5px;
   background: var(--surface);
   color: var(--danger);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 650;
   cursor: pointer;
 }
@@ -2078,14 +2078,14 @@ a {
 }
 
 .login-brand strong {
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: -0.02em;
 }
 
 .login-brand small {
   margin-top: 1px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .login-heading {
@@ -2115,7 +2115,7 @@ a {
 .login-footnote {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .login-form {
@@ -2130,7 +2130,7 @@ a {
 
 .field-group label {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 650;
 }
 
@@ -2162,7 +2162,7 @@ a {
   border-radius: 5px;
   background: var(--danger-soft);
   color: var(--danger);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .login-submit {
@@ -2251,7 +2251,7 @@ a {
 
 .kanban-heading h2 {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 680;
 }
 
@@ -2264,21 +2264,62 @@ a {
   border-radius: 4px;
   background: color-mix(in srgb, var(--surface) 65%, transparent);
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .kanban-empty {
   margin: 0;
   padding: 26px 15px;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
 }
 
 .pipeline-instructions {
   margin: -18px 0 14px;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
+}
+
+.pipeline-stage-manager {
+  margin-bottom: 22px;
+}
+
+.pipeline-stage-manager > summary {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 680;
+  cursor: pointer;
+  list-style: none;
+}
+
+.pipeline-stage-manager > summary::-webkit-details-marker { display: none; }
+.pipeline-stage-manager > summary span { color: var(--faint); font-size: 11px; }
+.pipeline-stage-manager-body { display: grid; gap: 18px; padding: 20px; border-top: 1px solid var(--line); }
+.pipeline-stage-manager-body h2 { margin: 0; font-size: 16px; }
+.pipeline-stage-manager-body > div:first-child p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.pipeline-stage-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.pipeline-stage-list > div { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface-subtle); }
+.pipeline-stage-list strong, .pipeline-stage-list small { display: block; }
+.pipeline-stage-list strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.pipeline-stage-list small { margin-top: 1px; color: var(--faint); font-size: 11px; }
+.pipeline-stage-list .icon-button { width: 31px; height: 31px; flex: none; color: var(--danger); }
+.pipeline-stage-create-form { display: flex; align-items: flex-end; gap: 9px; }
+.pipeline-stage-create-form .field-group { width: min(100%, 420px); }
+
+@media (max-width: 900px) {
+  .pipeline-stage-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .pipeline-stage-list { grid-template-columns: 1fr; }
+  .pipeline-stage-create-form { align-items: stretch; flex-direction: column; }
+  .pipeline-stage-create-form .field-group, .pipeline-stage-create-form .button { width: 100%; }
 }
 
 .kanban-cards {
@@ -2327,7 +2368,7 @@ a {
 .kanban-card-heading > a,
 .kanban-card-heading > strong {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 680;
   line-height: 1.45;
 }
@@ -2371,7 +2412,7 @@ a {
 .kanban-card-client {
   margin: 4px 0 12px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .kanban-card-data {
@@ -2388,7 +2429,7 @@ a {
 
 .kanban-card-data dt {
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .kanban-card-data dd {
@@ -2396,7 +2437,7 @@ a {
   margin: 0;
   overflow: hidden;
   color: var(--body-text);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2414,7 +2455,7 @@ a {
 
 .kanban-stage-select span {
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .kanban-stage-select select {
@@ -2426,7 +2467,7 @@ a {
   border-radius: 4px;
   background: var(--surface-subtle);
   color: var(--ink);
-  font-size: 10px;
+  font-size: 11px;
   outline: none;
 }
 
@@ -2461,7 +2502,7 @@ a {
   border-radius: 4px;
   background: transparent;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -2473,7 +2514,7 @@ a {
   border-radius: 4px;
   background: var(--surface-subtle);
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .follow-up-tab-active {
@@ -2510,7 +2551,7 @@ a {
   border-radius: 5px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
   cursor: pointer;
   list-style: none;
@@ -2547,7 +2588,7 @@ a {
   border-radius: 4px;
   background: transparent;
   color: var(--body-text);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-align: left;
   cursor: pointer;
@@ -2603,7 +2644,7 @@ a {
 
 .action-dialog-heading span {
   color: var(--faint);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -2632,7 +2673,7 @@ a {
 .action-dialog-description {
   margin: 11px 0 19px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .action-dialog-card > .field-group + .field-group {
@@ -2673,13 +2714,13 @@ a {
 
 .checkbox-field strong {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .checkbox-field small {
   margin-top: 2px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .experiments-table {
@@ -2726,7 +2767,7 @@ a {
 .experiment-summary span {
   display: block;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -2755,7 +2796,7 @@ a {
 .experiment-context span {
   display: block;
   color: var(--faint);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
 }
 
@@ -2764,20 +2805,20 @@ a {
   display: block;
   margin: 7px 0 0;
   color: var(--body-text);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.65;
   white-space: pre-wrap;
 }
 
 .experiment-context strong {
   color: var(--ink);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .section-description {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .experiment-results-table {
@@ -2830,13 +2871,13 @@ a {
 
 .experiment-sample-note strong {
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .experiment-sample-note p {
   margin: 3px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 @media (max-width: 1050px) {
@@ -3031,7 +3072,7 @@ a {
     background: var(--accent);
     color: var(--on-accent);
     box-shadow: 0 7px 20px rgb(20 71 51 / 22%);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 680;
   }
 
@@ -3049,7 +3090,7 @@ a {
   }
 
   .metric-value-money {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .section {

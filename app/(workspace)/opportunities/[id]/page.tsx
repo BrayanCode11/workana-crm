@@ -8,7 +8,7 @@ import { DeleteOpportunityButton } from "@/features/opportunities/delete-opportu
 import { OpportunityConversation } from "@/features/opportunities/opportunity-conversation";
 import { OpportunityNotes } from "@/features/opportunities/opportunity-notes";
 import { PreparedMessagesForm } from "@/features/opportunities/prepared-messages-form";
-import { getOpportunity } from "@/features/opportunities/queries";
+import { getOpportunity, getOpportunityFormOptions } from "@/features/opportunities/queries";
 import { StageForm } from "@/features/opportunities/stage-form";
 import {
   formatBudget,
@@ -35,8 +35,9 @@ export default async function OpportunityDetailPage({
   searchParams,
 }: OpportunityPageProps) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
-  const opportunity = await getOpportunity(id);
+  const [opportunity, options] = await Promise.all([getOpportunity(id), getOpportunityFormOptions()]);
   if (!opportunity) notFound();
+  const currentStageName = options.pipelineStages.find((stage) => stage.slug === opportunity.stage)?.name ?? stageLabel(opportunity.stage);
 
   const feedback = query.created === "1"
     ? "Oportunidad creada correctamente."
@@ -69,7 +70,7 @@ export default async function OpportunityDetailPage({
         <div>
           <div className="detail-title-row">
             <h1>{opportunity.title}</h1>
-            <Badge tone={stageTone(opportunity.stage)}>{stageLabel(opportunity.stage)}</Badge>
+            <Badge tone={stageTone(opportunity.stage)}>{currentStageName}</Badge>
           </div>
           <p>
             {opportunity.clients ? (
@@ -97,7 +98,7 @@ export default async function OpportunityDetailPage({
       {stageError && <div className="feedback-banner feedback-error" role="alert">No pudimos actualizar la etapa. Intenta nuevamente.</div>}
 
       <section className="opportunity-summary" aria-label="Resumen de la oportunidad">
-        <div><span>Etapa</span><strong>{stageLabel(opportunity.stage)}</strong></div>
+        <div><span>Etapa</span><strong>{currentStageName}</strong></div>
         <div><span>Presupuesto publicado</span><strong>{formatBudget(opportunity.published_budget_min, opportunity.published_budget_max, opportunity.published_budget_currency)}</strong></div>
         <div><span>Precio planeado</span><strong>{formatMoney(opportunity.planned_price, opportunity.planned_price_currency)}</strong></div>
         <div><span>Valor final</span><strong>{formatMoney(opportunity.final_value, opportunity.final_value_currency)}</strong></div>
@@ -132,7 +133,7 @@ export default async function OpportunityDetailPage({
             <div><dt>Primera respuesta</dt><dd>{formatDateTime(opportunity.first_response_at)}</dd></div>
           </dl>
           {!(["won", "lost"].includes(opportunity.stage)) && (
-            <StageForm opportunityId={opportunity.id} currentStage={opportunity.stage} />
+            <StageForm opportunityId={opportunity.id} currentStage={opportunity.stage} stages={options.pipelineStages} />
           )}
         </section>
 

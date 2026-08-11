@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { chooseLeastUsedVariant } from "@/features/experiments/assignment";
-import { activeOpportunityStages } from "./constants";
 import {
   formDataToObject,
   getFieldErrors,
@@ -19,6 +18,14 @@ async function validateReferences(
   userId: string,
   values: OpportunityInsert,
 ) {
+  const { data: stage } = await supabase
+    .from("pipeline_stages")
+    .select("slug")
+    .eq("slug", values.stage)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (!stage) return { field: "stage" as const, message: "La etapa seleccionada ya no está disponible." };
+
   if (values.client_id) {
     const { data } = await supabase
       .from("clients")
@@ -272,12 +279,14 @@ export async function updateOpportunityAction(
 
 export async function changeOpportunityStageAction(opportunityId: string, formData: FormData) {
   const stage = String(formData.get("stage") ?? "");
-  if (!activeOpportunityStages.includes(stage as (typeof activeOpportunityStages)[number])) {
-    redirect(`/opportunities/${opportunityId}?stage_error=1`);
-  }
-
   const { userId } = await requireUser();
   const supabase = await createClient();
+  const { data: target } = await supabase.from("pipeline_stages")
+    .select("slug")
+    .eq("slug", stage)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (!target || ["won", "lost"].includes(target.slug)) redirect(`/opportunities/${opportunityId}?stage_error=1`);
   const { data, error } = await supabase
     .from("opportunities")
     .update({ stage })

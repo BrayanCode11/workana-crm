@@ -3,6 +3,7 @@ export const opportunityStages = [
   "contacted",
   "follow_up_1",
   "follow_up_2",
+  "no_response",
   "responded",
   "proposal",
   "negotiation",
@@ -17,6 +18,7 @@ export const stageLabels: Record<OpportunityStage, string> = {
   contacted: "Contactado",
   follow_up_1: "Seguimiento 1",
   follow_up_2: "Seguimiento 2",
+  no_response: "No responde",
   responded: "Respondió",
   proposal: "Propuesta",
   negotiation: "Negociación",
@@ -27,6 +29,8 @@ export const stageLabels: Record<OpportunityStage, string> = {
 export const activeOpportunityStages = opportunityStages.filter(
   (stage) => stage !== "won" && stage !== "lost",
 );
+
+export const closedOpportunityStages = ["no_response", "won", "lost"] as const;
 
 export const currencies = ["USD", "COP", "EUR", "MXN", "ARS", "CLP", "BRL"] as const;
 
@@ -40,4 +44,3 @@ export const projectTypes = [
   "Integración",
   "Optimización",
 ] as const;
-

@@ -55,6 +55,7 @@ export type OpportunityFormOptions = {
   clients: OpportunityClient[];
   experiments: ExperimentOption[];
   lostReasons: LostReason[];
+  pipelineStages: Database["public"]["Tables"]["pipeline_stages"]["Row"][];
 };
 
 export type OpportunityFormField =

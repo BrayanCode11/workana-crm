@@ -1,5 +1,4 @@
 import type { Database } from "@/lib/supabase/database.types";
-import type { OpportunityStage } from "@/features/opportunities/constants";
 import type { LostReason, OpportunityClient } from "@/features/opportunities/types";
 
 type OpportunityRow = Database["public"]["Tables"]["opportunities"]["Row"];
@@ -28,7 +27,10 @@ export type PipelineOpportunity = Pick<
 export type PipelineData = {
   opportunities: PipelineOpportunity[];
   lostReasons: LostReason[];
+  stages: PipelineStage[];
 };
+
+export type PipelineStage = Database["public"]["Tables"]["pipeline_stages"]["Row"];
 
 export type PipelineStageUpdate = Pick<
   PipelineOpportunity,
@@ -48,7 +50,7 @@ export type PipelineActionResult =
   | { ok: false; message: string; errors?: Record<string, string> };
 
 export type PipelineCloseInput = {
-  stage: Extract<OpportunityStage, "won" | "lost">;
+  stage: "won" | "lost";
   final_value?: string;
   final_value_currency?: string;
   won_at?: string;
@@ -57,3 +59,8 @@ export type PipelineCloseInput = {
   lost_at?: string;
 };
 
+export type PipelineStageActionState = {
+  ok?: boolean;
+  message?: string;
+  errors?: { name?: string };
+};

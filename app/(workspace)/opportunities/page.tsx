@@ -3,7 +3,6 @@ import Link from "next/link";
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
 import { Badge, PrimaryLink } from "@/components/ui";
-import { opportunityStages, stageLabels } from "@/features/opportunities/constants";
 import { getOpportunities, getOpportunityFormOptions } from "@/features/opportunities/queries";
 import { formatBudget, formatDate, formatDateTime, formatMoney, stageTone } from "@/features/opportunities/utils";
 
@@ -28,6 +27,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps<"/op
   ]);
   const hasFilters = Object.values(filters).some(Boolean);
   const deleted = params.deleted === "1";
+  const stageNames = new Map(options.pipelineStages.map((stage) => [stage.slug, stage.name]));
 
   return (
     <>
@@ -61,7 +61,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps<"/op
             </select>
             <select aria-label="Filtrar por etapa" className="filter-select" defaultValue={filters.stage} name="stage">
               <option value="">Todas las etapas</option>
-              {opportunityStages.map((stage) => <option key={stage} value={stage}>{stageLabels[stage]}</option>)}
+              {options.pipelineStages.map((stage) => <option key={stage.id} value={stage.slug}>{stage.name}</option>)}
             </select>
             <select aria-label="Filtrar por cliente" className="filter-select" defaultValue={filters.client} name="client">
               <option value="">Todos los clientes</option>
@@ -96,7 +96,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps<"/op
                     </Link>
                   </td>
                   <td>{opportunity.clients ? <Link className="table-link" href={`/clients/${opportunity.clients.id}`}>{opportunity.clients.name}</Link> : "—"}</td>
-                  <td><Badge tone={stageTone(opportunity.stage)}>{stageLabels[opportunity.stage as keyof typeof stageLabels] ?? opportunity.stage}</Badge></td>
+                  <td><Badge tone={stageTone(opportunity.stage)}>{stageNames.get(opportunity.stage) ?? opportunity.stage}</Badge></td>
                   <td className="currency-cell">{formatBudget(opportunity.published_budget_min, opportunity.published_budget_max, opportunity.published_budget_currency)}</td>
                   <td className="currency-cell">{formatMoney(opportunity.planned_price, opportunity.planned_price_currency)}</td>
                   <td>{opportunity.experiments ? <><span className="table-primary">{opportunity.experiments.name}</span>{opportunity.experiment_variants && <span className="table-secondary">{opportunity.experiment_variants.code}</span>}</> : "—"}</td>

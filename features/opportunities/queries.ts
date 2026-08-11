@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { opportunityStages } from "./constants";
+import { closedOpportunityStages } from "./constants";
 import type {
   ExperimentOption,
   OpportunityFilters,
@@ -49,7 +49,7 @@ export async function getOpportunities(filters: OpportunityFilters = {}) {
         .some((value) => value?.toLocaleLowerCase("es").includes(query)),
     );
   }
-  if (filters.stage && opportunityStages.includes(filters.stage as (typeof opportunityStages)[number])) {
+  if (filters.stage) {
     opportunities = opportunities.filter((opportunity) => opportunity.stage === filters.stage);
   }
   if (filters.client) {
@@ -59,9 +59,9 @@ export async function getOpportunities(filters: OpportunityFilters = {}) {
     opportunities = opportunities.filter((opportunity) => opportunity.experiment_id === filters.experiment);
   }
   if (filters.status === "active") {
-    opportunities = opportunities.filter((opportunity) => !["won", "lost"].includes(opportunity.stage));
+    opportunities = opportunities.filter((opportunity) => !closedOpportunityStages.includes(opportunity.stage as (typeof closedOpportunityStages)[number]));
   } else if (filters.status === "closed") {
-    opportunities = opportunities.filter((opportunity) => ["won", "lost"].includes(opportunity.stage));
+    opportunities = opportunities.filter((opportunity) => closedOpportunityStages.includes(opportunity.stage as (typeof closedOpportunityStages)[number]));
   }
 
   return opportunities;
@@ -90,7 +90,7 @@ export const getOpportunity = cache(async (id: string) => {
 export async function getOpportunityFormOptions(): Promise<OpportunityFormOptions> {
   const { userId } = await requireUser();
   const supabase = await createClient();
-  const [clientsResult, experimentsResult, lostReasonsResult] = await Promise.all([
+  const [clientsResult, experimentsResult, lostReasonsResult, stagesResult] = await Promise.all([
     supabase
       .from("clients")
       .select("id, name, company_name")
@@ -107,9 +107,15 @@ export async function getOpportunityFormOptions(): Promise<OpportunityFormOption
       .select("id, name, slug")
       .eq("is_active", true)
       .order("id"),
+    supabase
+      .from("pipeline_stages")
+      .select("id, user_id, slug, name, position, is_protected, created_at, updated_at")
+      .eq("user_id", userId)
+      .order("position")
+      .order("created_at"),
   ]);
 
-  const error = clientsResult.error ?? experimentsResult.error ?? lostReasonsResult.error;
+  const error = clientsResult.error ?? experimentsResult.error ?? lostReasonsResult.error ?? stagesResult.error;
   if (error) {
     console.error("Unable to load opportunity options", { code: error.code });
     throw new Error("No pudimos cargar las opciones del formulario.");
@@ -119,5 +125,6 @@ export async function getOpportunityFormOptions(): Promise<OpportunityFormOption
     clients: clientsResult.data ?? [],
     experiments: (experimentsResult.data ?? []) as ExperimentOption[],
     lostReasons: lostReasonsResult.data ?? [],
+    pipelineStages: stagesResult.data ?? [],
   };
 }

@@ -6,7 +6,6 @@ import { formatCurrencyGroups } from "@/features/clients/utils";
 import { getDashboardData } from "@/features/dashboard/queries";
 import { getDashboardMetrics } from "@/features/dashboard/utils";
 import { formatRate } from "@/features/experiments/utils";
-import { opportunityStages, stageLabels } from "@/features/opportunities/constants";
 import { formatDateTime } from "@/features/opportunities/utils";
 
 export default async function DashboardPage() {
@@ -117,10 +116,10 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <section className="panel pipeline-summary" aria-label="Resumen por etapa">
-            {opportunityStages.map((stage) => (
-              <Link className="pipeline-summary-item" href={`/opportunities?stage=${stage}`} key={stage}>
-                <span>{stageLabels[stage]}</span>
-                <strong>{metrics.stageCounts[stage]}</strong>
+            {data.pipelineStages.map((stage) => (
+              <Link className="pipeline-summary-item" href={`/opportunities?stage=${stage.slug}`} key={stage.slug}>
+                <span>{stage.name}</span>
+                <strong>{metrics.stageCounts[stage.slug] ?? 0}</strong>
               </Link>
             ))}
           </section>

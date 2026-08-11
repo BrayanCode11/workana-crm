@@ -28,7 +28,7 @@ const dashboardOpportunitySelect = `
 export async function getDashboardData(): Promise<DashboardData> {
   const { userId } = await requireUser();
   const supabase = await createClient();
-  const [opportunitiesResult, clientsResult, messagesResult] = await Promise.all([
+  const [opportunitiesResult, clientsResult, messagesResult, stagesResult] = await Promise.all([
     supabase
       .from("opportunities")
       .select(dashboardOpportunitySelect)
@@ -39,9 +39,10 @@ export async function getDashboardData(): Promise<DashboardData> {
       .select("id")
       .eq("user_id", userId),
     supabase.from("opportunity_messages").select("opportunity_id, direction, created_at").eq("user_id", userId).order("created_at"),
+    supabase.from("pipeline_stages").select("slug, name").eq("user_id", userId).order("position").order("created_at"),
   ]);
 
-  const error = opportunitiesResult.error ?? clientsResult.error ?? messagesResult.error;
+  const error = opportunitiesResult.error ?? clientsResult.error ?? messagesResult.error ?? stagesResult.error;
   if (error) {
     console.error("Unable to load dashboard", { code: error.code });
     throw new Error("No pudimos cargar el dashboard.");
@@ -51,13 +52,14 @@ export async function getDashboardData(): Promise<DashboardData> {
   const now = Date.now();
   const latestDirection = new Map<string, string>();
   (messagesResult.data ?? []).forEach((message) => latestDirection.set(message.opportunity_id, message.direction));
-  const active = opportunities.filter((item) => !["won", "lost"].includes(item.stage));
+  const active = opportunities.filter((item) => !["no_response", "won", "lost"].includes(item.stage));
   const followUp1Pending = active.filter((item) => item.first_contacted_at && !item.follow_up_1_at && item.next_follow_up_at && new Date(item.next_follow_up_at).getTime() <= now);
   const followUp2Pending = active.filter((item) => item.follow_up_1_at && !item.follow_up_2_at && item.next_follow_up_at && new Date(item.next_follow_up_at).getTime() <= now);
 
   return {
     opportunities,
     clientIds: (clientsResult.data ?? []).map((client) => client.id),
+    pipelineStages: stagesResult.data ?? [],
     attention: {
       consultationPending: active.filter((item) => !item.first_contacted_at).length,
       followUp1Pending: followUp1Pending.length,

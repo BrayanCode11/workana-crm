@@ -5,6 +5,7 @@ export const stageLabels: Record<string, string> = {
   contacted: "Contactado",
   follow_up_1: "Seguimiento 1",
   follow_up_2: "Seguimiento 2",
+  no_response: "No responde",
   responded: "Respondió",
   proposal: "Propuesta",
   negotiation: "Negociación",
@@ -20,7 +21,7 @@ export function getClientMetrics(opportunities: ClientOpportunity[]): ClientMetr
   let lastOpportunityAt: string | null = null;
 
   opportunities.forEach((opportunity) => {
-    if (opportunity.stage !== "won" && opportunity.stage !== "lost") active += 1;
+    if (!["no_response", "won", "lost"].includes(opportunity.stage)) active += 1;
     if (opportunity.stage === "won") won += 1;
     if (opportunity.stage === "lost") lost += 1;
 

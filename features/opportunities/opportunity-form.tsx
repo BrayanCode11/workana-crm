@@ -3,7 +3,7 @@
 import { LoaderCircle, Plus, Save } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { currencies, opportunityStages, projectTypes, stageLabels, type OpportunityStage } from "./constants";
+import { currencies, projectTypes } from "./constants";
 import type {
   OpportunityFormField,
   OpportunityFormOptions,
@@ -44,10 +44,10 @@ export function OpportunityForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, initialState);
-  const initialStage = opportunityStages.includes(values?.stage as OpportunityStage)
-    ? values?.stage as OpportunityStage
+  const initialStage = options.pipelineStages.some((item) => item.slug === values?.stage)
+    ? values?.stage as string
     : "detected";
-  const [stage, setStage] = useState<OpportunityStage>(initialStage);
+  const [stage, setStage] = useState(initialStage);
   const [experimentId, setExperimentId] = useState(values?.experiment_id ?? "");
   const [variantId, setVariantId] = useState(values?.experiment_variant_id ?? "");
   const variants = (options.experiments.find((experiment) => experiment.id === experimentId)?.experiment_variants ?? [])
@@ -272,8 +272,8 @@ export function OpportunityForm({
         <div className="form-grid">
           <div className="field-group">
             <label htmlFor="stage">Etapa <span aria-hidden="true">*</span></label>
-            <select id="stage" name="stage" value={stage} onChange={(event) => setStage(event.target.value as OpportunityStage)}>
-              {opportunityStages.map((item) => <option key={item} value={item}>{stageLabels[item]}</option>)}
+            <select id="stage" name="stage" value={stage} onChange={(event) => setStage(event.target.value)}>
+              {options.pipelineStages.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}
             </select>
             <FieldError field="stage" state={state} />
           </div>

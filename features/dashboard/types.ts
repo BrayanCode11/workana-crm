@@ -1,5 +1,4 @@
 import type { Database } from "@/lib/supabase/database.types";
-import type { OpportunityStage } from "@/features/opportunities/constants";
 
 type OpportunityRow = Database["public"]["Tables"]["opportunities"]["Row"];
 
@@ -29,6 +28,7 @@ export type DashboardOpportunity = Pick<
 export type DashboardData = {
   opportunities: DashboardOpportunity[];
   clientIds: string[];
+  pipelineStages: { slug: string; name: string }[];
   attention: {
     consultationPending: number;
     followUp1Pending: number;
@@ -55,7 +55,7 @@ export type DashboardMetrics = {
   clients: number;
   recurrentClients: number;
   clientsWithActiveOpportunities: number;
-  stageCounts: Record<OpportunityStage, number>;
+  stageCounts: Record<string, number>;
   followUps: {
     overdue: DashboardOpportunity[];
     today: DashboardOpportunity[];

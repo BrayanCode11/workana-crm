@@ -15,7 +15,7 @@ import {
 import { GripVertical, LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { currencies, opportunityStages, stageLabels, type OpportunityStage } from "@/features/opportunities/constants";
+import { currencies, stageLabels } from "@/features/opportunities/constants";
 import type { LostReason } from "@/features/opportunities/types";
 import { dateInputValue, formatDateTime, formatMoney } from "@/features/opportunities/utils";
 import { closePipelineOpportunityAction, movePipelineOpportunityAction } from "./actions";
@@ -23,6 +23,7 @@ import type {
   PipelineActionResult,
   PipelineCloseInput,
   PipelineOpportunity,
+  PipelineStage,
 } from "./types";
 
 type ClosureRequest = {
@@ -33,9 +34,11 @@ type ClosureRequest = {
 export function PipelineBoard({
   initialOpportunities,
   lostReasons,
+  stages,
 }: {
   initialOpportunities: PipelineOpportunity[];
   lostReasons: LostReason[];
+  stages: PipelineStage[];
 }) {
   const [opportunities, setOpportunities] = useState(initialOpportunities);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -47,8 +50,9 @@ export function PipelineBoard({
     useSensor(KeyboardSensor),
   );
   const activeOpportunity = opportunities.find((opportunity) => opportunity.id === activeId) ?? null;
+  const stageName = (slug: string) => stages.find((stage) => stage.slug === slug)?.name ?? slug;
 
-  function requestMove(opportunityId: string, targetStage: OpportunityStage) {
+  function requestMove(opportunityId: string, targetStage: string) {
     const opportunity = opportunities.find((item) => item.id === opportunityId);
     if (!opportunity || opportunity.stage === targetStage || pendingIds.includes(opportunityId)) return;
     if (targetStage === "won" || targetStage === "lost") {
@@ -58,7 +62,7 @@ export function PipelineBoard({
     void persistMove(opportunity, targetStage);
   }
 
-  async function persistMove(opportunity: PipelineOpportunity, targetStage: OpportunityStage) {
+  async function persistMove(opportunity: PipelineOpportunity, targetStage: string) {
     const previous = opportunity;
     setFeedback(null);
     setPendingIds((current) => [...current, opportunity.id]);
@@ -75,7 +79,7 @@ export function PipelineBoard({
         setOpportunities((current) => current.map((item) => (
           item.id === opportunity.id ? { ...item, ...result.opportunity } : item
         )));
-        setFeedback({ tone: "success", message: `${opportunity.title} se movió a ${stageLabels[targetStage]}.` });
+        setFeedback({ tone: "success", message: `${opportunity.title} se movió a ${stageName(targetStage)}.` });
       }
     } catch {
       setOpportunities((current) => current.map((item) => item.id === opportunity.id ? previous : item));
@@ -117,8 +121,8 @@ export function PipelineBoard({
     setActiveId(null);
     if (!event.over) return;
     const targetStage = String(event.over.id);
-    if (!opportunityStages.includes(targetStage as OpportunityStage)) return;
-    requestMove(String(event.active.id), targetStage as OpportunityStage);
+    if (!stages.some((stage) => stage.slug === targetStage)) return;
+    requestMove(String(event.active.id), targetStage);
   }
 
   const accessibility = {
@@ -131,10 +135,10 @@ export function PipelineBoard({
         return item ? `Tomaste ${item.title}.` : "Tomaste una oportunidad.";
       },
       onDragOver: ({ over }: { over: { id: string | number } | null }) => over
-        ? `Sobre la etapa ${stageLabels[String(over.id) as OpportunityStage] ?? String(over.id)}.`
+        ? `Sobre la etapa ${stageName(String(over.id))}.`
         : "Fuera de una etapa.",
       onDragEnd: ({ over }: { over: { id: string | number } | null }) => over
-        ? `Oportunidad soltada en ${stageLabels[String(over.id) as OpportunityStage] ?? String(over.id)}.`
+        ? `Oportunidad soltada en ${stageName(String(over.id))}.`
         : "Movimiento cancelado.",
       onDragCancel: () => "Movimiento cancelado.",
     },
@@ -159,12 +163,13 @@ export function PipelineBoard({
       >
         <div className="kanban-scroll">
           <section className="kanban-board" aria-label="Pipeline de oportunidades">
-            {opportunityStages.map((stage) => {
-              const stageOpportunities = opportunities.filter((opportunity) => opportunity.stage === stage);
+            {stages.map((stage) => {
+              const stageOpportunities = opportunities.filter((opportunity) => opportunity.stage === stage.slug);
               return (
                 <PipelineColumn
-                  key={stage}
+                  key={stage.id}
                   stage={stage}
+                  stages={stages}
                   opportunities={stageOpportunities}
                   pendingIds={pendingIds}
                   onStageChange={requestMove}
@@ -192,20 +197,22 @@ export function PipelineBoard({
 
 function PipelineColumn({
   stage,
+  stages,
   opportunities,
   pendingIds,
   onStageChange,
 }: {
-  stage: OpportunityStage;
+  stage: PipelineStage;
+  stages: PipelineStage[];
   opportunities: PipelineOpportunity[];
   pendingIds: string[];
-  onStageChange: (id: string, stage: OpportunityStage) => void;
+  onStageChange: (id: string, stage: string) => void;
 }) {
-  const { isOver, setNodeRef } = useDroppable({ id: stage, data: { stage } });
+  const { isOver, setNodeRef } = useDroppable({ id: stage.slug, data: { stage: stage.slug } });
   return (
     <article className={`kanban-column ${isOver ? "kanban-column-over" : ""}`} ref={setNodeRef}>
       <header className="kanban-heading">
-        <h2>{stageLabels[stage]}</h2>
+        <h2>{stage.name}</h2>
         <span className="kanban-count">{opportunities.length}</span>
       </header>
       <div className="kanban-cards">
@@ -216,6 +223,7 @@ function PipelineColumn({
             key={opportunity.id}
             opportunity={opportunity}
             pending={pendingIds.includes(opportunity.id)}
+            stages={stages}
             onStageChange={onStageChange}
           />
         ))}
@@ -227,11 +235,13 @@ function PipelineColumn({
 function PipelineCard({
   opportunity,
   pending,
+  stages,
   onStageChange,
 }: {
   opportunity: PipelineOpportunity;
   pending: boolean;
-  onStageChange: (id: string, stage: OpportunityStage) => void;
+  stages: PipelineStage[];
+  onStageChange: (id: string, stage: string) => void;
 }) {
   const {
     attributes,
@@ -277,9 +287,9 @@ function PipelineCard({
         <select
           value={opportunity.stage}
           disabled={pending}
-          onChange={(event) => onStageChange(opportunity.id, event.target.value as OpportunityStage)}
+          onChange={(event) => onStageChange(opportunity.id, event.target.value)}
         >
-          {opportunityStages.map((stage) => <option key={stage} value={stage}>{stageLabels[stage]}</option>)}
+          {stages.map((stage) => <option key={stage.id} value={stage.slug}>{stage.name}</option>)}
         </select>
       </label>
     </article>

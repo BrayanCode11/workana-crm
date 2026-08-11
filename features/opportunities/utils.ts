@@ -13,7 +13,7 @@ export function stageLabel(value: string) {
 
 export function stageTone(stage: string): "neutral" | "warning" | "success" {
   if (stage === "won") return "success";
-  if (stage === "lost") return "warning";
+  if (stage === "lost" || stage === "no_response") return "warning";
   return "neutral";
 }
 
@@ -65,4 +65,3 @@ export function dateTimeInputValue(value: string | null) {
   const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? "";
   return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:${part("minute")}`;
 }
-

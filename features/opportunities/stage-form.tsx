@@ -1,8 +1,10 @@
 import { ArrowRight } from "lucide-react";
 import { changeOpportunityStageAction } from "./actions";
-import { activeOpportunityStages, stageLabels } from "./constants";
+import type { Database } from "@/lib/supabase/database.types";
 
-export function StageForm({ opportunityId, currentStage }: { opportunityId: string; currentStage: string }) {
+type PipelineStage = Database["public"]["Tables"]["pipeline_stages"]["Row"];
+
+export function StageForm({ opportunityId, currentStage, stages }: { opportunityId: string; currentStage: string; stages: PipelineStage[] }) {
   const action = changeOpportunityStageAction.bind(null, opportunityId);
 
   return (
@@ -10,7 +12,7 @@ export function StageForm({ opportunityId, currentStage }: { opportunityId: stri
       <label htmlFor="quick-stage">Mover a etapa</label>
       <div>
         <select id="quick-stage" name="stage" defaultValue={currentStage}>
-          {activeOpportunityStages.map((stage) => <option key={stage} value={stage}>{stageLabels[stage]}</option>)}
+          {stages.filter((stage) => !["won", "lost"].includes(stage.slug)).map((stage) => <option key={stage.id} value={stage.slug}>{stage.name}</option>)}
         </select>
         <button className="button" type="submit"><ArrowRight size={14} /> Actualizar</button>
       </div>
@@ -18,4 +20,3 @@ export function StageForm({ opportunityId, currentStage }: { opportunityId: stri
     </form>
   );
 }
-

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronDown, ExternalLink, LoaderCircle, MessageCircleReply, RefreshCw, XCircle } from "lucide-react";
+import { Ban, Check, ChevronDown, ExternalLink, LoaderCircle, MessageCircleReply, RefreshCw, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useRef } from "react";
 import { useFormStatus } from "react-dom";
@@ -8,6 +8,7 @@ import type { LostReason } from "@/features/opportunities/types";
 import { dateInputValue, dateTimeInputValue } from "@/features/opportunities/utils";
 import {
   markLostFromFollowUpAction,
+  markNoResponseAction,
   markRespondedAction,
   registerFollowUpAction,
   rescheduleFollowUpAction,
@@ -31,6 +32,7 @@ export function FollowUpActions({
   const lostDialog = useRef<HTMLDialogElement>(null);
   const registerAction = registerFollowUpAction.bind(null, opportunity.id, period, query);
   const respondedAction = markRespondedAction.bind(null, opportunity.id, period, query);
+  const noResponseAction = markNoResponseAction.bind(null, opportunity.id, period, query);
   const rescheduleAction = rescheduleFollowUpAction.bind(null, opportunity.id, period, query);
   const lostAction = markLostFromFollowUpAction.bind(null, opportunity.id, period, query);
   const [rescheduleState, rescheduleFormAction, reschedulePending] = useActionState(rescheduleAction, initialState);
@@ -64,6 +66,12 @@ export function FollowUpActions({
           {canMarkResponded && (
             <form action={respondedAction}>
               <MenuSubmitButton icon="reply" label="Marcar respondió" />
+            </form>
+          )}
+
+          {canMarkResponded && (
+            <form action={noResponseAction}>
+              <MenuSubmitButton icon="no-response" label="Marcar no responde" />
             </form>
           )}
 
@@ -182,7 +190,7 @@ export function FollowUpActions({
   );
 }
 
-function MenuSubmitButton({ icon, label }: { icon: "check" | "reply"; label: string }) {
+function MenuSubmitButton({ icon, label }: { icon: "check" | "reply" | "no-response"; label: string }) {
   const { pending } = useFormStatus();
   return (
     <button disabled={pending} type="submit">
@@ -190,7 +198,9 @@ function MenuSubmitButton({ icon, label }: { icon: "check" | "reply"; label: str
         ? <LoaderCircle className="spin" size={14} />
         : icon === "check"
           ? <Check size={14} />
-          : <MessageCircleReply size={14} />}
+          : icon === "reply"
+            ? <MessageCircleReply size={14} />
+            : <Ban size={14} />}
       {pending ? "Guardando…" : label}
     </button>
   );

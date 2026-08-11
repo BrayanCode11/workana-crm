@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { currencies, opportunityStages } from "./constants";
+import { currencies } from "./constants";
 import type { OpportunityFormField, OpportunityInsert } from "./types";
 import { normalizeWorkanaProjectUrl } from "./workana-parser";
 
@@ -62,7 +62,7 @@ export const opportunityFormSchema = z.object({
   planned_price_currency: currency,
   project_type: optionalText(160),
   technologies: optionalText(1000),
-  stage: z.enum(opportunityStages, { message: "Selecciona una etapa válida." }),
+  stage: z.string().trim().regex(/^[a-z0-9]+(?:_[a-z0-9]+)*$/, "Selecciona una etapa válida.").max(60, "Selecciona una etapa válida."),
   experiment_id: optionalUuid,
   experiment_variant_id: optionalUuid,
   published_at: optionalDate,

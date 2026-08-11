@@ -147,6 +147,28 @@ export async function markRespondedAction(
   redirect(followUpUrl(context.period, context.query, "responded"));
 }
 
+export async function markNoResponseAction(
+  opportunityId: string,
+  period: string,
+  query: string,
+) {
+  const context = safeContext(period, query);
+  const { userId } = await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("opportunities")
+    .update({ stage: "no_response", next_follow_up_at: null })
+    .eq("id", opportunityId)
+    .eq("user_id", userId)
+    .in("stage", ["contacted", "follow_up_1", "follow_up_2"])
+    .select("id, client_id")
+    .maybeSingle();
+  if (error || !data) redirect(followUpUrl(context.period, context.query, "action_error"));
+  refreshFollowUpPaths(opportunityId, data.client_id);
+  revalidatePath("/dashboard");
+  revalidatePath("/pipeline");
+  redirect(followUpUrl(context.period, context.query, "no_response"));
+}
+
 export async function rescheduleFollowUpAction(
   opportunityId: string,
   period: string,

@@ -30,6 +30,12 @@ function opportunity(id: string, overrides: Partial<DashboardOpportunity> = {}):
 test("resume pipeline, resultados, clientes y agenda sin mezclar monedas", () => {
   const metrics = getDashboardMetrics({
     clientIds: ["client-1", "client-2", "client-3"],
+    pipelineStages: [
+      { slug: "detected", name: "Detectado" },
+      { slug: "contacted", name: "Contactado" },
+      { slug: "won", name: "Ganado" },
+      { slug: "lost", name: "Perdido" },
+    ],
     attention: { consultationPending: 0, followUp1Pending: 0, followUp1Prepared: 0, followUp2Pending: 0, followUp2Prepared: 0, repliesPending: 0 },
     opportunities: [
       opportunity("1", { client_id: "client-1", stage: "contacted", next_follow_up_at: "2026-08-06T15:00:00Z" }),
@@ -50,4 +56,18 @@ test("resume pipeline, resultados, clientes y agenda sin mezclar monedas", () =>
   assert.equal(metrics.stageCounts.won, 2);
   assert.deepEqual(metrics.followUps.overdue.map(({ id }) => id), ["1"]);
   assert.deepEqual(metrics.wonByCurrency, { USD: 100, COP: 200000 });
+});
+
+test("No responde cierra la agenda sin contar como ganada o perdida", () => {
+  const metrics = getDashboardMetrics({
+    clientIds: [],
+    pipelineStages: [{ slug: "no_response", name: "No responde" }],
+    attention: { consultationPending: 0, followUp1Pending: 0, followUp1Prepared: 0, followUp2Pending: 0, followUp2Prepared: 0, repliesPending: 0 },
+    opportunities: [opportunity("nr", { stage: "no_response", next_follow_up_at: null })],
+  });
+  assert.equal(metrics.active, 0);
+  assert.equal(metrics.waiting, 0);
+  assert.equal(metrics.won, 0);
+  assert.equal(metrics.lost, 0);
+  assert.equal(metrics.stageCounts.no_response, 1);
 });

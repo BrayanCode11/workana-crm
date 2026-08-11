@@ -43,7 +43,7 @@ export async function getFollowUpData(search = ""): Promise<FollowUpData> {
   }
 
   let opportunities = (opportunitiesResult.data ?? []) as unknown as FollowUpOpportunity[];
-  opportunities = opportunities.filter((opportunity) => !["won", "lost"].includes(opportunity.stage));
+  opportunities = opportunities.filter((opportunity) => !["no_response", "won", "lost"].includes(opportunity.stage));
 
   const normalizedSearch = search.trim().toLocaleLowerCase("es");
   if (normalizedSearch) {
@@ -59,4 +59,3 @@ export async function getFollowUpData(search = ""): Promise<FollowUpData> {
     lostReasons: lostReasonsResult.data ?? [],
   };
 }
-

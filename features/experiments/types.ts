@@ -34,7 +34,7 @@ export type ExperimentFormState = {
   errors?: Partial<Record<ExperimentFormField, string>>;
 };
 
-export type VariantFormField = "code" | "name" | "description" | "ai_instructions" | "is_active";
+export type VariantFormField = "code" | "name" | "description" | "message_instructions" | "is_active";
 
 export type VariantFormState = {
   message?: string;

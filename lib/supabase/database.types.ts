@@ -77,7 +77,7 @@ export type Database = {
       }
       experiment_variants: {
         Row: {
-          ai_instructions: string | null
+          message_instructions: string | null
           code: string
           created_at: string
           description: string | null
@@ -89,7 +89,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          ai_instructions?: string | null
+          message_instructions?: string | null
           code: string
           created_at?: string
           description?: string | null
@@ -101,7 +101,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
-          ai_instructions?: string | null
+          message_instructions?: string | null
           code?: string
           created_at?: string
           description?: string | null
@@ -195,9 +195,12 @@ export type Database = {
           final_value_currency: string | null
           first_contacted_at: string | null
           first_response_at: string | null
+          follow_up_1_message: string | null
           follow_up_1_at: string | null
+          follow_up_2_message: string | null
           follow_up_2_at: string | null
           id: string
+          initial_message: string | null
           last_contact_at: string | null
           lost_at: string | null
           lost_reason_id: number | null
@@ -232,9 +235,12 @@ export type Database = {
           final_value_currency?: string | null
           first_contacted_at?: string | null
           first_response_at?: string | null
+          follow_up_1_message?: string | null
           follow_up_1_at?: string | null
+          follow_up_2_message?: string | null
           follow_up_2_at?: string | null
           id?: string
+          initial_message?: string | null
           last_contact_at?: string | null
           lost_at?: string | null
           lost_reason_id?: number | null
@@ -269,9 +275,12 @@ export type Database = {
           final_value_currency?: string | null
           first_contacted_at?: string | null
           first_response_at?: string | null
+          follow_up_1_message?: string | null
           follow_up_1_at?: string | null
+          follow_up_2_message?: string | null
           follow_up_2_at?: string | null
           id?: string
+          initial_message?: string | null
           last_contact_at?: string | null
           lost_at?: string | null
           lost_reason_id?: number | null
@@ -391,50 +400,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "opportunity_messages_opportunity_fk"
-            columns: ["opportunity_id", "user_id"]
-            isOneToOne: false
-            referencedRelation: "opportunities"
-            referencedColumns: ["id", "user_id"]
-          },
-        ]
-      }
-      ai_generations: {
-        Row: {
-          content: string | null
-          created_at: string
-          generation_type: string
-          id: string
-          model: string
-          opportunity_id: string
-          prompt_version: string
-          structured_data: Json
-          user_id: string
-        }
-        Insert: {
-          content?: string | null
-          created_at?: string
-          generation_type: string
-          id?: string
-          model: string
-          opportunity_id: string
-          prompt_version: string
-          structured_data: Json
-          user_id?: string
-        }
-        Update: {
-          content?: string | null
-          created_at?: string
-          generation_type?: string
-          id?: string
-          model?: string
-          opportunity_id?: string
-          prompt_version?: string
-          structured_data?: Json
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ai_generations_opportunity_fk"
             columns: ["opportunity_id", "user_id"]
             isOneToOne: false
             referencedRelation: "opportunities"

@@ -1107,67 +1107,63 @@ a {
   font-weight: 650;
 }
 
-.ai-assistant {
+.chatgpt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.chatgpt-actions .inline-success,
+.chatgpt-actions .field-error {
+  flex-basis: 100%;
+  text-align: right;
+}
+
+.prepared-messages,
+.opportunity-conversation {
   padding: 24px;
 }
 
-.ai-assistant-header .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.ai-empty {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 20px;
-  border: 1px dashed var(--line-strong);
-  background: var(--surface-subtle);
-  color: var(--muted);
-}
-
-.ai-empty strong { color: var(--ink); }
-.ai-empty p { margin: 3px 0 0; }
-
-.ai-insight-grid {
+.prepared-messages-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 18px;
   border: 1px solid var(--line);
 }
 
-.ai-insight-grid article {
+.prepared-message-block {
   min-width: 0;
-  padding: 16px;
+  padding: 18px;
   border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
   background: var(--surface-subtle);
 }
 
-.ai-insight-grid article:nth-child(3n) { border-right: 0; }
-.ai-insight-grid article:nth-last-child(-n + 3) { border-bottom: 0; }
-.ai-insight-grid article > span { display: block; margin-bottom: 7px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
-.ai-insight-grid p, .ai-insight-grid ul { margin: 4px 0 0; color: var(--body-text); }
-.ai-insight-grid ul { padding-left: 18px; }
-
-.ai-message-editor {
-  margin-top: 18px;
-  padding: 18px;
-  border: 1px solid var(--line);
+.prepared-message-block:last-child { border-right: 0; }
+.prepared-message-heading { display: flex; min-height: 31px; align-items: center; justify-content: space-between; gap: 10px; }
+.prepared-message-heading label { color: var(--ink); font-size: 12px; font-weight: 680; }
+.prepared-message-block textarea,
+.conversation-composer textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px 12px;
+  resize: vertical;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
   background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.55;
 }
+.prepared-message-block textarea:focus,
+.conversation-composer textarea:focus { border-color: var(--focus); outline: 3px solid color-mix(in srgb, var(--focus) 20%, transparent); }
+.prepared-sent-button { width: 100%; margin-top: 10px; }
+.prepared-messages-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; }
+.prepared-messages-footer > span { color: var(--muted); font-size: 11px; }
+.prepared-messages .feedback-banner { margin-top: 14px; }
 
-.ai-message-heading, .ai-inline-actions, .ai-proposal-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.ai-message-editor textarea { width: 100%; margin-top: 10px; }
-.ai-inline-actions { justify-content: flex-start; margin-top: 10px; }
-.ai-conversation, .ai-proposal { padding-top: 24px; border-top: 1px solid var(--line); }
+.conversation-empty { margin: 0 0 18px; padding: 17px; border: 1px dashed var(--line-strong); color: var(--muted); }
+.conversation-composer { display: grid; gap: 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+.conversation-composer .button { width: fit-content; }
 
 .message-timeline {
   display: grid;
@@ -1188,37 +1184,36 @@ a {
 .message-item > div { display: flex; justify-content: space-between; gap: 16px; font-size: 11px; }
 .message-item span { color: var(--muted); }
 .message-item p { margin: 6px 0 0; white-space: pre-wrap; }
-.ai-proposal-summary { padding: 12px 0; color: var(--body-text); }
 
 .attention-panel { padding: 20px; }
-.attention-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); }
+.attention-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); }
 .attention-grid a { display: flex; min-width: 0; justify-content: space-between; gap: 10px; padding: 13px; border-right: 1px solid var(--line); background: var(--surface-subtle); color: var(--body-text); }
 .attention-grid a:last-child { border-right: 0; }
 .attention-grid a:hover { background: var(--surface-hover); color: var(--ink); }
 .attention-grid strong { color: var(--ink); font-size: 18px; }
+.attention-grid span, .attention-grid small { display: block; }
+.attention-grid small { margin-top: 2px; color: var(--faint); font-size: 9px; }
 
 @media (max-width: 900px) {
   .attention-grid { grid-template-columns: 1fr 1fr; }
   .attention-grid a { border-bottom: 1px solid var(--line); }
   .attention-grid a:nth-child(2n) { border-right: 0; }
   .attention-grid a:last-child { border-bottom: 0; }
-  .ai-insight-grid { grid-template-columns: 1fr 1fr; }
-  .ai-insight-grid article:nth-child(3n) { border-right: 1px solid var(--line); }
-  .ai-insight-grid article:nth-child(2n) { border-right: 0; }
-  .ai-insight-grid article:nth-last-child(-n + 3) { border-bottom: 1px solid var(--line); }
-  .ai-insight-grid article:nth-last-child(-n + 2) { border-bottom: 0; }
+  .prepared-messages-grid { grid-template-columns: 1fr; }
+  .prepared-message-block { border-right: 0; border-bottom: 1px solid var(--line); }
+  .prepared-message-block:last-child { border-bottom: 0; }
 }
 
 @media (max-width: 620px) {
   .attention-grid { grid-template-columns: 1fr; }
   .attention-grid a { border-right: 0; }
-  .ai-assistant { padding: 18px; }
-  .ai-assistant-header, .ai-proposal .section-heading { align-items: stretch; flex-direction: column; }
-  .ai-insight-grid { grid-template-columns: 1fr; }
-  .ai-insight-grid article { border-right: 0 !important; border-bottom: 1px solid var(--line) !important; }
-  .ai-insight-grid article:last-child { border-bottom: 0 !important; }
+  .prepared-messages, .opportunity-conversation { padding: 18px; }
+  .prepared-messages-footer { align-items: stretch; flex-direction: column; }
+  .prepared-messages-footer .button { width: 100%; }
+  .chatgpt-actions { width: 100%; }
+  .chatgpt-actions .button { flex: 1; }
+  .chatgpt-actions .inline-success, .chatgpt-actions .field-error { text-align: left; }
   .message-item { max-width: 94%; }
-  .ai-inline-actions { align-items: flex-start; flex-direction: column; }
 }
 
 .back-link {
@@ -3010,6 +3005,16 @@ a {
 
   .detail-header {
     align-items: flex-start;
+  }
+
+  .opportunity-detail-header {
+    flex-direction: column;
+  }
+
+  .opportunity-detail-header .page-actions {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
   }
 
   .mobile-create-button {

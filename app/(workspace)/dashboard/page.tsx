@@ -51,10 +51,9 @@ export default async function DashboardPage() {
         <div className="section-heading"><div><h2 id="attention-title">Requieren atención</h2><p className="section-description">Acciones comerciales pendientes calculadas con mensajes e hitos reales.</p></div></div>
         <div className="attention-grid">
           <Link href="/opportunities?stage=detected"><span>Consultas por enviar</span><strong>{data.attention.consultationPending}</strong></Link>
-          <Link href="/follow-ups?period=overdue"><span>F1 pendientes</span><strong>{data.attention.followUp1Pending}</strong></Link>
-          <Link href="/follow-ups?period=overdue"><span>F2 pendientes</span><strong>{data.attention.followUp2Pending}</strong></Link>
+          <Link href="/follow-ups?period=overdue"><span>F1 pendientes<small>{data.attention.followUp1Prepared} con mensaje preparado</small></span><strong>{data.attention.followUp1Pending}</strong></Link>
+          <Link href="/follow-ups?period=overdue"><span>F2 pendientes<small>{data.attention.followUp2Prepared} con mensaje preparado</small></span><strong>{data.attention.followUp2Pending}</strong></Link>
           <Link href="/opportunities?stage=responded"><span>Respuestas sin contestar</span><strong>{data.attention.repliesPending}</strong></Link>
-          <Link href="/opportunities?stage=responded"><span>Posible propuesta</span><strong>{data.attention.proposalReady}</strong></Link>
         </div>
       </section>
 
@@ -92,13 +91,16 @@ export default async function DashboardPage() {
                 </div>
               ) : urgentFollowUps.map((opportunity) => {
                 const overdue = metrics.followUps.overdue.some((item) => item.id === opportunity.id);
+                const prepared = opportunity.follow_up_1_at
+                  ? Boolean(opportunity.follow_up_2_message?.trim())
+                  : Boolean(opportunity.follow_up_1_message?.trim());
                 return (
                   <Link className="dashboard-follow-up-item" href={`/opportunities/${opportunity.id}`} key={opportunity.id}>
                     <div>
                       <strong>{opportunity.title}</strong>
                       <span>{opportunity.clients?.name ?? "Sin cliente"} · {formatDateTime(opportunity.next_follow_up_at)}</span>
                     </div>
-                    <Badge tone={overdue ? "warning" : "success"}>{overdue ? "Vencido" : "Hoy"}</Badge>
+                    <Badge tone={overdue ? "warning" : "success"}>{overdue ? "Vencido" : "Hoy"}{prepared ? " · Mensaje preparado" : " · Sin mensaje"}</Badge>
                   </Link>
                 );
               })}

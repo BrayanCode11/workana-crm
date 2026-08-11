@@ -12,7 +12,9 @@ export type DashboardOpportunity = Pick<
   | "first_contacted_at"
   | "first_response_at"
   | "follow_up_1_at"
+  | "follow_up_1_message"
   | "follow_up_2_at"
+  | "follow_up_2_message"
   | "proposal_at"
   | "negotiation_at"
   | "won_at"
@@ -30,9 +32,10 @@ export type DashboardData = {
   attention: {
     consultationPending: number;
     followUp1Pending: number;
+    followUp1Prepared: number;
     followUp2Pending: number;
+    followUp2Prepared: number;
     repliesPending: number;
-    proposalReady: number;
   };
 };
 

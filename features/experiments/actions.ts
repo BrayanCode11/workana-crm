@@ -124,7 +124,7 @@ export async function updateVariantAction(
     const semanticChanged = current.code !== parsed.values.code
       || current.name !== parsed.values.name
       || (current.description ?? null) !== parsed.values.description
-      || (current.ai_instructions ?? null) !== parsed.values.ai_instructions;
+      || (current.message_instructions ?? null) !== parsed.values.message_instructions;
     if (semanticChanged) return { message: "La estrategia de una variante contactada no puede modificarse. Solo puedes cambiar su estado activo." };
   }
   const { data, error } = await supabase

@@ -58,10 +58,10 @@ export function VariantForm({
         </div>
 
         <div className="field-group form-field-wide">
-          <label htmlFor="ai_instructions">Instrucciones para la apertura con IA</label>
-          <textarea id="ai_instructions" name="ai_instructions" rows={7} maxLength={10000} defaultValue={values?.ai_instructions ?? ""} readOnly={locked} disabled={pending} placeholder="Describe qué debe distinguir la apertura de esta variante." aria-invalid={Boolean(state.errors?.ai_instructions)} aria-describedby={state.errors?.ai_instructions ? "ai_instructions-error ai-instructions-help" : "ai-instructions-help"} />
-          <span className="field-help" id="ai-instructions-help">Se aplica solo al mensaje inicial. Seguimientos y respuestas usan reglas comerciales comunes.</span>
-          <FieldError field="ai_instructions" state={state} />
+          <label htmlFor="message_instructions">Instrucciones de mensajería</label>
+          <textarea id="message_instructions" name="message_instructions" rows={7} maxLength={10000} defaultValue={values?.message_instructions ?? ""} readOnly={locked} disabled={pending} placeholder="Describe qué debe cambiar específicamente en los mensajes de esta variante." aria-invalid={Boolean(state.errors?.message_instructions)} aria-describedby={state.errors?.message_instructions ? "message_instructions-error message-instructions-help" : "message-instructions-help"} />
+          <span className="field-help" id="message-instructions-help">Describe qué debe cambiar específicamente en los mensajes de esta variante.</span>
+          <FieldError field="message_instructions" state={state} />
         </div>
 
         <label className="checkbox-field form-field-wide">

@@ -2,9 +2,12 @@ import { ArrowLeft, ExternalLink, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui";
-import { OpportunityAssistant } from "@/features/ai/opportunity-assistant";
+import { formatChatGPTContext } from "@/features/opportunities/chatgpt-context";
+import { CopyChatGPTContext } from "@/features/opportunities/copy-chatgpt-context";
 import { DeleteOpportunityButton } from "@/features/opportunities/delete-opportunity-button";
+import { OpportunityConversation } from "@/features/opportunities/opportunity-conversation";
 import { OpportunityNotes } from "@/features/opportunities/opportunity-notes";
+import { PreparedMessagesForm } from "@/features/opportunities/prepared-messages-form";
 import { getOpportunity } from "@/features/opportunities/queries";
 import { StageForm } from "@/features/opportunities/stage-form";
 import {
@@ -51,6 +54,12 @@ export default async function OpportunityDetailPage({
         : null;
   const stageError = query.stage_error === "1";
   const notes = opportunity.opportunity_notes ?? [];
+  const messages = opportunity.opportunity_messages ?? [];
+  const chatGPTContext = formatChatGPTContext({
+    ...opportunity,
+    experiment: opportunity.experiments,
+    variant: opportunity.experiment_variants,
+  });
 
   return (
     <>
@@ -72,6 +81,7 @@ export default async function OpportunityDetailPage({
           </p>
         </div>
         <div className="page-actions">
+          <CopyChatGPTContext value={chatGPTContext} />
           {opportunity.workana_url && (
             <a className="button" href={opportunity.workana_url} target="_blank" rel="noreferrer">
               <ExternalLink size={15} aria-hidden="true" /> Workana <span className="sr-only">(abre en una pestaña nueva)</span>
@@ -152,12 +162,25 @@ export default async function OpportunityDetailPage({
         </section>
       </div>
 
-      <OpportunityAssistant opportunity={opportunity} />
+      <PreparedMessagesForm
+        opportunityId={opportunity.id}
+        messages={{
+          initial_message: opportunity.initial_message,
+          follow_up_1_message: opportunity.follow_up_1_message,
+          follow_up_2_message: opportunity.follow_up_2_message,
+        }}
+        stage={opportunity.stage}
+        firstContactedAt={opportunity.first_contacted_at}
+        followUp1At={opportunity.follow_up_1_at}
+        followUp2At={opportunity.follow_up_2_at}
+      />
+
+      <OpportunityConversation opportunityId={opportunity.id} messages={messages} closed={["won", "lost"].includes(opportunity.stage)} />
 
       <OpportunityNotes opportunityId={opportunity.id} notes={notes} feedback={noteFeedback} />
 
       <section className="danger-zone section">
-        <div><h2>Eliminar oportunidad</h2><p>Se eliminará también su historial de notas. Esta acción es permanente.</p></div>
+        <div><h2>Eliminar oportunidad</h2><p>Se eliminarán también sus notas y su historial comercial. Esta acción es permanente.</p></div>
         <DeleteOpportunityButton opportunityId={opportunity.id} />
       </section>
     </>

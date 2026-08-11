@@ -27,6 +27,11 @@ La aplicación funcional incluye:
 - Cierres ganados y perdidos con valor final, moneda, fecha, motivo y observaciones validadas.
 - Hitos comerciales históricos inmutables aunque una oportunidad vuelva a una etapa anterior.
 - Experimentos con estados, variantes activables y analítica comparativa basada en hitos reales.
+- Asignación automática y balanceada de variantes para las nuevas oportunidades.
+- Importador local de publicaciones de Workana con preview editable.
+- Contexto estructurado copiable para usar manualmente en ChatGPT, sin APIs ni claves de modelos.
+- Consulta inicial, seguimiento 1 y seguimiento 2 preparados y editables por oportunidad.
+- Historial separado de mensajes comerciales realmente enviados y recibidos.
 - Tasas por variante acompañadas por su muestra y valores ganados agrupados por moneda.
 - Dashboard operativo con KPIs históricos, agenda prioritaria, pipeline y resumen de clientes.
 - Navegación por teclado, alternativa al drag and drop, foco controlado y acciones móviles contextuales.
@@ -79,11 +84,9 @@ El archivo `.env.example` documenta las variables sin incluir secretos:
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-5.6-sol
 ```
 
-Usa `.env.local` para valores reales. `OPENAI_API_KEY` es exclusivamente de servidor y nunca debe llevar el prefijo `NEXT_PUBLIC_`. Los archivos `.env*`, excepto `.env.example`, están ignorados por Git.
+Usa `.env.local` para valores reales. Los archivos `.env*`, excepto `.env.example`, están ignorados por Git. El CRM no utiliza proveedores de modelos ni necesita claves de IA.
 
 ## Supabase
 
@@ -121,7 +124,17 @@ Se prefieren Server Components. Los Client Components se reservan para formulari
 
 ## Base de datos
 
-El modelo incluye perfiles, clientes, oportunidades, notas, mensajes comerciales, generaciones de IA, experimentos, variantes y motivos de pérdida. `client_id` es opcional; las tecnologías son un arreglo simple de texto y las monedas nunca se agregan entre sí sin agruparlas.
+El modelo incluye perfiles, clientes, oportunidades, notas, mensajes comerciales, mensajes preparados, experimentos, variantes y motivos de pérdida. `client_id` es opcional; las tecnologías son un arreglo simple de texto y las monedas nunca se agregan entre sí sin agruparlas.
+
+## Flujo Workana y ChatGPT manual
+
+1. Pega la publicación en **Pegar desde Workana**, analiza y revisa el preview.
+2. Crea la oportunidad; el CRM asigna automáticamente la variante activa menos utilizada del experimento predeterminado.
+3. En el detalle, usa **Copiar para ChatGPT** y pega el contexto en tu chat especializado.
+4. Copia de vuelta la Consulta, F1 y F2 en **Mensajes preparados** y guárdalos una sola vez.
+5. Cuando corresponda, copia el texto, envíalo manualmente en Workana y confirma la acción real en el CRM.
+
+Guardar o copiar mensajes preparados no cambia etapas, fechas, historial ni métricas. Solamente **Consulta enviada**, **Seguimiento 1 enviado**, **Seguimiento 2 enviado** y **Registrar respuesta** alteran la cadencia o el historial comercial. F1 se programa a 24 horas y F2 a 48 horas desde el primer contacto.
 
 Las relaciones compuestas garantizan que cliente, oportunidad, nota, experimento y variante pertenezcan al mismo usuario. Los clientes con oportunidades no pueden eliminarse accidentalmente. Los timestamps comerciales se registran la primera vez que se alcanza cada evento y se conservan aunque cambie la etapa actual.
 
@@ -134,8 +147,6 @@ La rama `main` está conectada a Vercel; cada publicación inicia un nuevo despl
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-5.6-sol
 ```
 
 Después de cambiar una variable hay que volver a desplegar: las variables `NEXT_PUBLIC_*` quedan incorporadas durante el build. Los valores reales nunca se incluyen en el repositorio.

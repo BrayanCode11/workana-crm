@@ -1,7 +1,6 @@
 import { ArrowLeft, ExternalLink, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui";
 import { formatChatGPTContext } from "@/features/opportunities/chatgpt-context";
 import { CopyChatGPTContext } from "@/features/opportunities/copy-chatgpt-context";
 import { DeleteOpportunityButton } from "@/features/opportunities/delete-opportunity-button";
@@ -16,7 +15,6 @@ import {
   formatDateTime,
   formatMoney,
   stageLabel,
-  stageTone,
 } from "@/features/opportunities/utils";
 
 type OpportunityPageProps = {
@@ -69,7 +67,6 @@ export default async function OpportunityDetailPage({
         <div>
           <div className="detail-title-row">
             <h1>{opportunity.title}</h1>
-            <Badge tone={stageTone(opportunity.stage)}>{currentStageName}</Badge>
           </div>
           <p>
             {opportunity.clients ? (

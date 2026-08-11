@@ -135,7 +135,7 @@ export default async function ExperimentDetailPage({
                       <Link className="client-name-link" href={`/experiments/${experiment.id}/variants/${variant.id}/edit`}>
                         {variant.code} · {variant.name}
                       </Link>
-                      <span className="table-secondary">{variant.is_active ? "Activa" : "Inactiva"} · {variantMetrics.assigned} asignadas · {variant.message_instructions ? "Mensajería configurada" : "Sin instrucciones de mensajería"}</span>
+                      <span className="table-secondary">{variant.is_active ? "Activa" : "Inactiva"} · {variantMetrics.assigned} asignadas</span>
                     </td>
                     <td className="numeric-cell"><strong>{variantMetrics.contacted}</strong></td>
                     <td className="numeric-cell">{variantMetrics.responded}</td>

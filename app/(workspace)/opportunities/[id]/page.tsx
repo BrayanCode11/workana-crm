@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui";
 import { formatChatGPTContext } from "@/features/opportunities/chatgpt-context";
 import { CopyChatGPTContext } from "@/features/opportunities/copy-chatgpt-context";
 import { DeleteOpportunityButton } from "@/features/opportunities/delete-opportunity-button";
-import { OpportunityConversation } from "@/features/opportunities/opportunity-conversation";
+import { ExpandableDescription } from "@/features/opportunities/expandable-description";
 import { OpportunityNotes } from "@/features/opportunities/opportunity-notes";
 import { PreparedMessagesForm } from "@/features/opportunities/prepared-messages-form";
 import { getOpportunity, getOpportunityFormOptions } from "@/features/opportunities/queries";
@@ -55,7 +55,6 @@ export default async function OpportunityDetailPage({
         : null;
   const stageError = query.stage_error === "1";
   const notes = opportunity.opportunity_notes ?? [];
-  const messages = opportunity.opportunity_messages ?? [];
   const chatGPTContext = formatChatGPTContext({
     ...opportunity,
     experiment: opportunity.experiments,
@@ -120,7 +119,7 @@ export default async function OpportunityDetailPage({
           </dl>
           <div className="detail-copy-block">
             <span>Descripción</span>
-            <p>{opportunity.description ?? "No hay una descripción registrada."}</p>
+            <ExpandableDescription description={opportunity.description} />
           </div>
         </section>
 
@@ -176,12 +175,10 @@ export default async function OpportunityDetailPage({
         followUp2At={opportunity.follow_up_2_at}
       />
 
-      <OpportunityConversation opportunityId={opportunity.id} messages={messages} closed={["won", "lost"].includes(opportunity.stage)} />
-
       <OpportunityNotes opportunityId={opportunity.id} notes={notes} feedback={noteFeedback} />
 
       <section className="danger-zone section">
-        <div><h2>Eliminar oportunidad</h2><p>Se eliminarán también sus notas y su historial comercial. Esta acción es permanente.</p></div>
+        <div><h2>Eliminar oportunidad</h2><p>Se eliminarán también sus notas y datos asociados. Esta acción es permanente.</p></div>
         <DeleteOpportunityButton opportunityId={opportunity.id} />
       </section>
     </>

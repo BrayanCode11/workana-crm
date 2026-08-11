@@ -10,7 +10,7 @@ export type ChatGPTContextInput = {
   description?: string | null;
   workana_url?: string | null;
   experiment?: { name: string | null } | null;
-  variant?: { code: string | null; name: string | null; message_instructions?: string | null } | null;
+  variant?: { code: string | null; name: string | null } | null;
 };
 
 function clean(value: string | null | undefined) {
@@ -59,8 +59,6 @@ export function formatChatGPTContext(input: ChatGPTContextInput) {
     const variantName = clean(input.variant?.name);
     if (variantCode || variantName) {
       sections.push(`VARIANTE\n${[variantCode, variantName].filter(Boolean).join(" — ")}`);
-      const instructions = clean(input.variant?.message_instructions);
-      if (instructions) sections.push(`INSTRUCCIONES DE VARIANTE\n${instructions}`);
     }
   }
 

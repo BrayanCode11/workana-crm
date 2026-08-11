@@ -57,13 +57,6 @@ export function VariantForm({
           <FieldError field="description" state={state} />
         </div>
 
-        <div className="field-group form-field-wide">
-          <label htmlFor="message_instructions">Instrucciones de mensajería</label>
-          <textarea id="message_instructions" name="message_instructions" rows={7} maxLength={10000} defaultValue={values?.message_instructions ?? ""} readOnly={locked} disabled={pending} placeholder="Describe qué debe cambiar específicamente en los mensajes de esta variante." aria-invalid={Boolean(state.errors?.message_instructions)} aria-describedby={state.errors?.message_instructions ? "message_instructions-error message-instructions-help" : "message-instructions-help"} />
-          <span className="field-help" id="message-instructions-help">Describe qué debe cambiar específicamente en los mensajes de esta variante.</span>
-          <FieldError field="message_instructions" state={state} />
-        </div>
-
         <label className="checkbox-field form-field-wide">
           <input name="is_active" type="checkbox" defaultChecked={values?.is_active ?? true} disabled={pending} />
           <span><strong>Variante activa</strong><small>Podrá asignarse normalmente a nuevas oportunidades.</small></span>

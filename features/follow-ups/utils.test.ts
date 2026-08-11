@@ -6,16 +6,10 @@ import { bogotaDateKey, groupFollowUps } from "./utils";
 function followUp(id: string, nextFollowUpAt: string): FollowUpOpportunity {
   return {
     id,
-    client_id: null,
     title: `Oportunidad ${id}`,
     stage: "contacted",
     last_contact_at: null,
     next_follow_up_at: nextFollowUpAt,
-    experiment_id: null,
-    experiment_variant_id: null,
-    clients: null,
-    experiments: null,
-    experiment_variants: null,
   };
 }
 

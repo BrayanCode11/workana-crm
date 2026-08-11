@@ -7,16 +7,10 @@ import { groupFollowUps } from "./utils";
 
 const followUpSelect = `
   id,
-  client_id,
   title,
   stage,
   last_contact_at,
-  next_follow_up_at,
-  experiment_id,
-  experiment_variant_id,
-  clients (id, name, company_name),
-  experiments (id, name),
-  experiment_variants (id, code, name)
+  next_follow_up_at
 `;
 
 export async function getFollowUpData(search = ""): Promise<FollowUpData> {
@@ -48,9 +42,7 @@ export async function getFollowUpData(search = ""): Promise<FollowUpData> {
   const normalizedSearch = search.trim().toLocaleLowerCase("es");
   if (normalizedSearch) {
     opportunities = opportunities.filter((opportunity) =>
-      [opportunity.title, opportunity.clients?.name, opportunity.clients?.company_name]
-        .filter(Boolean)
-        .some((value) => value?.toLocaleLowerCase("es").includes(normalizedSearch)),
+      opportunity.title.toLocaleLowerCase("es").includes(normalizedSearch),
     );
   }
 

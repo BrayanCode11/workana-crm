@@ -21,7 +21,6 @@ export type OpportunityVariant = {
   code: string;
   name: string;
   is_active?: boolean;
-  message_instructions?: string | null;
 };
 
 export type LostReason = {
@@ -43,7 +42,6 @@ export type OpportunityWithRelations = OpportunityRow & {
   experiment_variants: Omit<OpportunityVariant, "experiment_id" | "is_active"> | null;
   lost_reasons: LostReason | null;
   opportunity_notes?: OpportunityNote[];
-  opportunity_messages?: Database["public"]["Tables"]["opportunity_messages"]["Row"][];
 };
 
 export type ExperimentOption = OpportunityExperiment & {

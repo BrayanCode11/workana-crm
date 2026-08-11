@@ -15,7 +15,7 @@ import {
 } from "@/features/follow-ups/utils";
 import { formatDateTime, stageLabel, stageTone } from "@/features/opportunities/utils";
 
-const headers = ["Proyecto", "Cliente", "Estado", "Último contacto", "Próximo seguimiento", "Tiempo transcurrido", "Experimento", "Acciones"];
+const headers = ["Proyecto", "Estado", "Último contacto", "Próximo seguimiento", "Tiempo transcurrido", "Acciones"];
 const periods: FollowUpPeriod[] = ["overdue", "today", "upcoming"];
 
 function stringParam(value: string | string[] | undefined) {
@@ -76,7 +76,7 @@ export default async function FollowUpsPage({ searchParams }: PageProps<"/follow
           <label className="search-field">
             <span className="sr-only">Buscar seguimientos</span>
             <Search size={15} aria-hidden="true" />
-            <input defaultValue={query} name="q" placeholder="Buscar proyecto o cliente…" type="search" />
+            <input defaultValue={query} name="q" placeholder="Buscar proyecto…" type="search" />
           </label>
           <input name="period" type="hidden" value={selectedPeriod} />
           <div className="filter-row">
@@ -93,7 +93,7 @@ export default async function FollowUpsPage({ searchParams }: PageProps<"/follow
                   <EmptyState
                     icon={CalendarCheck}
                     title={query ? "No encontramos seguimientos" : total === 0 ? "No tienes seguimientos pendientes" : `No hay seguimientos ${selectedPeriod === "today" ? "para hoy" : selectedPeriod === "overdue" ? "vencidos" : "próximos"}`}
-                    description={query ? "Prueba con otro proyecto o cliente." : total === 0 ? "Al mover una oportunidad a Contactado, aparecerá aquí con una fecha sugerida." : "Revisa las otras categorías para continuar con tu agenda."}
+                    description={query ? "Prueba con otro proyecto." : total === 0 ? "Al mover una oportunidad a Contactado, aparecerá aquí con una fecha sugerida." : "Revisa las otras categorías para continuar con tu agenda."}
                   />
                 </td></tr>
               ) : followUps.map((opportunity) => (
@@ -103,16 +103,10 @@ export default async function FollowUpsPage({ searchParams }: PageProps<"/follow
                       {opportunity.title}<ArrowUpRight size={13} aria-hidden="true" />
                     </Link>
                   </td>
-                  <td>{opportunity.clients ? <Link className="table-link" href={`/clients/${opportunity.clients.id}`}>{opportunity.clients.name}</Link> : "—"}</td>
                   <td><Badge tone={stageTone(opportunity.stage)}>{stageLabel(opportunity.stage)}</Badge></td>
                   <td>{formatDateTime(opportunity.last_contact_at)}</td>
                   <td className={selectedPeriod === "overdue" ? "follow-up-overdue-date" : ""}>{formatDateTime(opportunity.next_follow_up_at)}</td>
                   <td>{formatElapsed(opportunity.last_contact_at)}</td>
-                  <td>
-                    {opportunity.experiments ? (
-                      <><span className="table-primary">{opportunity.experiments.name}</span>{opportunity.experiment_variants && <span className="table-secondary">{opportunity.experiment_variants.code} · {opportunity.experiment_variants.name}</span>}</>
-                    ) : "—"}
-                  </td>
                   <td><FollowUpActions opportunity={opportunity} lostReasons={data.lostReasons} period={selectedPeriod} query={query} /></td>
                 </tr>
               ))}

@@ -15,14 +15,13 @@ const opportunityListSelect = `
   *,
   clients (id, name, company_name),
   experiments (id, name),
-  experiment_variants (id, code, name, message_instructions),
+  experiment_variants (id, code, name),
   lost_reasons (id, name, slug)
 `;
 
 const opportunityDetailSelect = `
   ${opportunityListSelect},
-  opportunity_notes (id, content, created_at, updated_at),
-  opportunity_messages (id, direction, message_type, content, created_at, user_id, opportunity_id)
+  opportunity_notes (id, content, created_at, updated_at)
 `;
 
 export async function getOpportunities(filters: OpportunityFilters = {}) {
@@ -76,7 +75,6 @@ export const getOpportunity = cache(async (id: string) => {
     .eq("id", id)
     .eq("user_id", userId)
     .order("created_at", { referencedTable: "opportunity_notes", ascending: false })
-    .order("created_at", { referencedTable: "opportunity_messages", ascending: true })
     .maybeSingle();
 
   if (error) {

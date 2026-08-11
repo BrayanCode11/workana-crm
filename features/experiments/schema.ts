@@ -42,7 +42,6 @@ const variantSchema = z.object({
   code: z.string().trim().min(1, "El código es obligatorio.").max(20, "Utiliza como máximo 20 caracteres."),
   name: z.string().trim().min(1, "El nombre es obligatorio.").max(160, "Utiliza como máximo 160 caracteres."),
   description: z.string().trim().max(5000, "Utiliza como máximo 5.000 caracteres."),
-  message_instructions: z.string().trim().max(10000, "Utiliza como máximo 10.000 caracteres."),
   is_active: z.boolean(),
 });
 
@@ -99,12 +98,11 @@ export function parseVariantForm(formData: FormData):
     code: String(formData.get("code") ?? ""),
     name: String(formData.get("name") ?? ""),
     description: String(formData.get("description") ?? ""),
-    message_instructions: String(formData.get("message_instructions") ?? ""),
     is_active: formData.get("is_active") === "on",
   });
 
   if (!parsed.success) {
-    const fields: VariantFormField[] = ["code", "name", "description", "message_instructions", "is_active"];
+    const fields: VariantFormField[] = ["code", "name", "description", "is_active"];
     return { state: { message: "Revisa los campos indicados.", errors: errorsFor(parsed.error, fields) } };
   }
 
@@ -113,7 +111,6 @@ export function parseVariantForm(formData: FormData):
       code: parsed.data.code.toLocaleUpperCase("es"),
       name: parsed.data.name,
       description: parsed.data.description || null,
-      message_instructions: parsed.data.message_instructions || null,
       is_active: parsed.data.is_active,
     },
   };

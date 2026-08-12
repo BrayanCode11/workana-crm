@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarClock, CheckCircle2, ClockAlert, Users } from "lucide-react";
+import { ArrowUpRight, CalendarClock, CheckCircle2, ClipboardPaste, ClockAlert, Users } from "lucide-react";
 import Link from "next/link";
 import { PageHeader } from "@/components/page-header";
 import { Badge, PrimaryLink } from "@/components/ui";
@@ -33,7 +33,15 @@ export default async function DashboardPage() {
         eyebrow="Resumen general"
         title="Dashboard"
         description="Tu prospección, el pipeline y los seguimientos importantes en un solo lugar."
-        actions={<PrimaryLink href="/opportunities/new">Nueva oportunidad</PrimaryLink>}
+        className="dashboard-page-header"
+        actions={(
+          <>
+            <PrimaryLink href="/opportunities/new">Agregar oportunidad</PrimaryLink>
+            <Link className="button" href="/opportunities/import">
+              <ClipboardPaste size={16} aria-hidden="true" /> Pegar desde Workana
+            </Link>
+          </>
+        )}
       />
 
       <section className="dashboard-kpi-grid" aria-label="Indicadores principales">

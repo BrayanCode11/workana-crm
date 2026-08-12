@@ -1,6 +1,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseWorkanaProject } from "./workana-parser";
+import {
+  extractBudget,
+  extractCanonicalWorkanaUrl,
+  extractContactCountry,
+  extractContactName,
+  extractDescription,
+  extractMarkdownLinks,
+  extractTechnologies,
+  extractTitle,
+  normalizeWorkanaText,
+  parseWorkanaProject,
+} from "./workana-parser";
+import { multiparagraphProjectFixture, profileProjectFixture } from "./workana-parser.fixtures";
 
 const completeProject = `# Desarrollo de Plataforma E-commerce para Empresa Metalmecánica
 
@@ -165,4 +177,100 @@ test("separa habilidades planas para que el formulario pueda añadir comas", () 
 test("separa tecnologías desconocidas cuando el texto incluye delimitadores", () => {
   const text = "Proyecto\nPublicado el 07 Agosto, 2026\nHabilidades necesarias: Astro | SvelteKit | Mercado Pago";
   assert.deepEqual(parseWorkanaProject(text).technologies, ["Astro", "SvelteKit", "Mercado Pago"]);
+});
+
+test("extrae perfil, país, miles y skills válidas del formato con enlace /e/", () => {
+  const result = parseWorkanaProject(profileProjectFixture);
+  assert.deepEqual(result, {
+    title: "Diseño y Desarrollo de Landing Page Profesional para Empresa de Construcción Subterránea",
+    description: "Se requiere el diseño y desarrollo de una landing page profesional para una empresa especializada en obras de construcción subterránea.",
+    contactName: "Cervecería T.",
+    contactCountry: "Mexico",
+    budgetMin: 500,
+    budgetMax: 1000,
+    budgetCurrency: "USD",
+    technologies: ["Diseño Gráfico", "JavaScript", "Amazon Web Services (AWS)", "Google Web Toolkit"],
+    publishedAt: "2026-08-11",
+    workanaUrl: "https://www.workana.com/job/diseno-y-desarrollo-de-landing-page-profesional-para-empresa-de-construccion-subterranea",
+  });
+});
+
+test("Contacto y País explícitos tienen prioridad sobre el perfil", () => {
+  const text = `${profileProjectFixture}\nContacto: Juan Pérez\nPaís: Colombia`;
+  assert.equal(extractContactName(normalizeWorkanaText(text)), "Juan Pérez");
+  assert.equal(extractContactCountry(normalizeWorkanaText(text)), "Colombia");
+});
+
+test("soporta presupuesto Menos de sin inventar mínimo", () => {
+  const budget = extractBudget("# Proyecto\n#### Menos de USD 50\nDescripción");
+  assert.deepEqual([budget.min, budget.max, budget.currency], [null, 50, "USD"]);
+});
+
+test("soporta presupuesto Más de sin inventar máximo", () => {
+  const budget = extractBudget("# Proyecto\n#### Más de USD 3.000\nDescripción");
+  assert.deepEqual([budget.min, budget.max, budget.currency], [3000, null, "USD"]);
+});
+
+test("soporta rangos con puntos como separadores de miles", () => {
+  const budget = extractBudget("# Proyecto\n#### USD 1.000 - 3.000\nDescripción");
+  assert.deepEqual([budget.min, budget.max, budget.currency], [1000, 3000, "USD"]);
+});
+
+test("preserva párrafos y listas de la descripción sin incluir metadatos", () => {
+  const description = extractDescription(normalizeWorkanaText(multiparagraphProjectFixture));
+  assert.equal(description, [
+    "Primer párrafo con el contexto principal del proyecto.",
+    "Segundo párrafo que debe conservarse completo.",
+    "- Primer requisito importante\n- Segundo requisito importante",
+    "Tercer párrafo después de la lista.",
+  ].join("\n\n"));
+  assert.doesNotMatch(description ?? "", /Categoría|Habilidades|TypeScript/);
+});
+
+test("extrae varias skills válidas aunque estén en una misma línea", () => {
+  const text = `# Proyecto\nSobre este proyecto\nDescripción\nHabilidades necesarias\n[HTML](https://www.workana.com/jobs?skills=html) [CSS](https://www.workana.com/jobs?skills=css)[JavaScript](https://www.workana.com/jobs?skills=javascript)`;
+  assert.deepEqual(extractTechnologies(normalizeWorkanaText(text)), ["HTML", "CSS", "JavaScript"]);
+});
+
+test("extrae skills válidas en múltiples líneas e ignora perfil y proyecto", () => {
+  assert.deepEqual(extractTechnologies(normalizeWorkanaText(profileProjectFixture)), [
+    "Diseño Gráfico",
+    "JavaScript",
+    "Amazon Web Services (AWS)",
+    "Google Web Toolkit",
+  ]);
+});
+
+test("selecciona /job/{slug} entre múltiples links y elimina hash, query y slash final", () => {
+  const text = [
+    "https://www.workana.com/job/insight/proyecto",
+    "https://www.workana.com/jobs?skills=javascript",
+    "https://www.workana.com/e/perfil",
+    "https://www.workana.com/job/proyecto-real/?source=listado#detalle",
+  ].join("\n");
+  assert.equal(extractCanonicalWorkanaUrl(text), "https://www.workana.com/job/proyecto-real");
+});
+
+test("parsea links Markdown con énfasis y título opcional", () => {
+  assert.deepEqual(extractMarkdownLinks('[**Cervecería T.**](https://www.workana.com/e/abc "Perfil")'), [
+    { text: "Cervecería T.", href: "https://www.workana.com/e/abc" },
+  ]);
+});
+
+test("sin país validado después del perfil no utiliza texto administrativo", () => {
+  const text = "[**Contacto**](https://www.workana.com/e/abc)\nDiseño y Multimedia\nhttps://www.workana.com/job/proyecto";
+  assert.equal(extractContactCountry(text), null);
+});
+
+test("tolera NBSP, espacios extra y caracteres invisibles", () => {
+  const text = "\u200b#   Proyecto con espacios \r\n\r\nPublicado el   11   AGOSTO,   2026\r\n#### USD 500 - 1.000";
+  const normalized = normalizeWorkanaText(text);
+  assert.equal(extractTitle(normalized), "Proyecto con espacios");
+  const result = parseWorkanaProject(text);
+  assert.equal(result.publishedAt, "2026-08-11");
+  assert.deepEqual([result.budgetMin, result.budgetMax], [500, 1000]);
+});
+
+test("el primer heading H1 prevalece y no se confunde con headings de presupuesto", () => {
+  assert.equal(extractTitle("# Título real\n##### Sobre este proyecto\n#### USD 500"), "Título real");
 });

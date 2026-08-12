@@ -3175,6 +3175,20 @@ a {
     display: none;
   }
 
+  .dashboard-page-header {
+    flex-direction: column;
+  }
+
+  .dashboard-page-header .page-actions {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-page-header .page-actions .button {
+    flex: 1 1 190px;
+  }
+
   .mobile-import-link {
     display: inline-flex;
     width: fit-content;
